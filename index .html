@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電源&插座需求表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #F0EDE6;
+  --border: #D8D3C8; --border2: #C4BFB2;
+  --text: #1C1A16; --text2: #6B6659; --text3: #9B9485;
+  --accent: #2C5F3F; --accent-light: #E8F2EC; --accent-text: #1A3D28;
+  --amber: #8A5C0A; --amber-light: #FEF3DC;
+  --red: #8A1A1A; --red-light: #FDEAEA;
+  --blue: #1A3A6B; --blue-light: #E8EEFB;
+  --sidebar: 220px;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; display: flex; flex-direction: column; }
+
+/* ── Header ── */
+header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+  height: 56px; position: sticky; top: 0; z-index: 200; flex-shrink: 0;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 26px; height: 26px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; }
+.logo-text { font-size: 14px; font-weight: 700; color: var(--text); }
+.logo-text span { color: var(--accent); }
+.header-right { display: flex; gap: 8px; align-items: center; }
+
+/* ── Layout ── */
+.layout { display: flex; flex: 1; min-height: 0; }
+
+/* ── Sidebar ── */
+aside {
+  width: var(--sidebar); flex-shrink: 0;
+  background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto;
+}
+.sidebar-head {
+  padding: 16px 16px 10px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  color: var(--text3); text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.proj-list { flex: 1; overflow-y: auto; padding: 8px 0; }
+.proj-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; cursor: pointer; transition: background 0.12s;
+  font-size: 13px; color: var(--text2); position: relative;
+}
+.proj-item:hover { background: var(--surface2); color: var(--text); }
+.proj-item.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
+.proj-item.active::before {
+  content: ''; position: absolute; left: 0; top: 4px; bottom: 4px;
+  width: 3px; background: var(--accent); border-radius: 0 2px 2px 0;
+}
+.proj-del {
+  margin-left: auto; opacity: 0; width: 20px; height: 20px;
+  border: none; background: transparent; cursor: pointer; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center; color: var(--text3);
+  flex-shrink: 0;
+}
+.proj-item:hover .proj-del { opacity: 1; }
+.proj-del:hover { background: var(--red-light); color: var(--red); }
+.proj-del svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* Project rename inline input */
+.proj-rename-input {
+  flex: 1; font-family: 'Noto Sans TC', sans-serif; font-size: 13px;
+  border: none; background: transparent; color: var(--accent-text);
+  outline: 1px solid var(--accent); border-radius: 3px;
+  padding: 0 4px; min-width: 0;
+}
+
+/* Project drag */
+.proj-drag { display: flex; align-items: center; width: 14px; flex-shrink: 0; color: var(--text3); cursor: grab; }
+.proj-drag:active { cursor: grabbing; }
+.proj-item.proj-dragging { opacity: 0.35; }
+.proj-item.proj-drag-over { outline: 2px dashed var(--accent); outline-offset: -2px; border-radius: 4px; }
+
+.sidebar-add { padding: 12px; border-top: 1px solid var(--border); }
+.sidebar-add input {
+  width: 100%; font-family: 'Noto Sans TC', sans-serif; font-size: 12px;
+  height: 30px; padding: 0 8px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--surface2); color: var(--text);
+  outline: none; margin-bottom: 6px;
+}
+.sidebar-add input:focus { border-color: var(--accent); }
+
+/* ── Main ── */
+main { flex: 1; min-width: 0; padding: 28px 28px 80px; overflow-y: auto; }
+
+/* ── Empty state ── */
+#empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 60vh; gap: 12px; color: var(--text3);
+}
+#empty-state .big { font-size: 40px; }
+#empty-state p { font-size: 14px; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500;
+  padding: 0 14px; height: 34px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--surface); color: var(--text2);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn:hover { border-color: var(--border2); background: var(--surface2); color: var(--text); }
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); color: #fff; }
+.btn-sm { height: 28px; font-size: 12px; padding: 0 10px; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ── Sync ── */
+.sync-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 3px 10px; border-radius: 20px;
+}
+.sync-ok   { background: var(--accent-light); color: var(--accent-text); }
+.sync-busy { background: var(--amber-light); color: var(--amber); }
+.sync-err  { background: var(--red-light); color: var(--red); }
+.sync-dot  { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.sync-busy .sync-dot { animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Project header ── */
+.proj-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.proj-title { font-size: 20px; font-weight: 700; color: var(--text); }
+
+/* ── Summary ── */
+.summary { display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; margin-bottom: 24px; }
+.scard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; }
+.scard .lbl { font-size: 11px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.05em; }
+.scard .val { font-size: 24px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--text); line-height: 1; }
+.scard .sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.scard.c-resident { border-top: 3px solid #1A3A6B; }
+.scard.c-flex     { border-top: 3px solid var(--accent); }
+.scard.c-seasonal { border-top: 3px solid #8A5C0A; }
+.scard.c-high     { border-top: 3px solid #8A1A1A; }
+.scard.c-lighting { border-top: 3px solid #6B3FA0; }
+
+/* ── Add zone bar ── */
+.add-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 12px 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px;
+}
+.add-bar select, .add-bar input[type=text] {
+  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; height: 32px; padding: 0 10px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface2); color: var(--text); outline: none;
+}
+.add-bar select:focus, .add-bar input:focus { border-color: var(--accent); }
+.add-bar select { min-width: 120px; }
+.add-bar input[type=text] { width: 140px; }
+.sep { flex: 1; }
+
+/* ── Zones ── */
+.zone {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow);
+  animation: fadeIn 0.18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+.zone-head {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+  cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.zone-head:hover { background: var(--surface2); }
+.zone-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.zone-count {
+  font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text3);
+  background: var(--surface2); padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
+}
+.zone-spacer { flex: 1; }
+.zone-chevron { color: var(--text3); transition: transform 0.2s; }
+.zone-chevron.open { transform: rotate(180deg); }
+.drag-handle { display: flex; align-items: center; width: 18px; flex-shrink: 0; color: var(--text3); cursor: grab; }
+.drag-handle:active { cursor: grabbing; }
+.zone.dragging { opacity: 0.35; box-shadow: none; }
+.zone.drag-over { outline: 2px dashed var(--accent); outline-offset: 2px; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--text3);
+  text-transform: uppercase; padding: 9px 12px; background: var(--surface2);
+  border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap;
+}
+tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+tbody tr:hover td { background: #FAFAF8; }
+td { padding: 8px 12px; color: var(--text); vertical-align: middle; }
+td input[type=text] {
+  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; width: 100%;
+  border: none; background: transparent; color: var(--text); outline: none; padding: 2px 0;
+}
+td input[type=text]:focus { background: var(--surface2); border-radius: 4px; padding: 2px 6px; margin: -2px -6px; width: calc(100% + 12px); }
+td select {
+  font-family: 'Noto Sans TC', sans-serif; font-size: 12px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--surface2); color: var(--text);
+  padding: 3px 8px; height: 26px; cursor: pointer; outline: none;
+}
+td select:focus { border-color: var(--accent); }
+.num-col { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); width: 32px; }
+.del-btn {
+  width: 26px; height: 26px; border: none; background: transparent; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text3); transition: all 0.15s;
+}
+.del-btn:hover { background: var(--red-light); color: var(--red); }
+.del-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+.del-zone {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: transparent; cursor: pointer; color: var(--text3); transition: all 0.15s;
+}
+.del-zone:hover { background: var(--red-light); color: var(--red); border-color: var(--red-light); }
+.del-zone svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+.add-item-row { padding: 9px 12px; border-top: 1px solid var(--border); background: var(--surface2); }
+.tbl-empty { text-align: center; padding: 28px; color: var(--text3); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><circle cx="8" cy="11" r="1" fill="white" stroke="none"/><circle cx="16" cy="11" r="1" fill="white" stroke="none"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+    </div>
+    <div class="logo-text">電源<span>&amp;</span>插座需求表</div>
+  </div>
+  <div class="header-right">
+    <span id="sync-status" class="sync-badge sync-busy"><span class="sync-dot"></span>連線中…</span>
+    <button class="btn" onclick="loadProject(currentProject)">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      重新整理
+    </button>
+    <button class="btn" onclick="exportCSV()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      匯出 CSV
+    </button>
+    <button class="btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      列印
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-head">專案列表</div>
+    <div class="proj-list" id="proj-list"></div>
+    <div class="sidebar-add">
+      <input type="text" id="new-proj-input" placeholder="新專案名稱…" maxlength="40">
+      <button class="btn btn-primary btn-block btn-sm" onclick="addProject()">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新增專案
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main id="main-content">
+    <div id="empty-state">
+      <div class="big">📋</div>
+      <p>從左側選擇或新增專案</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbylMfR4FmIslTy-tZB9JsDDEt8PLdOxU_R2xN0xF5Am2B1XdyUaC36maEzy9IPVec17/exec';
+
+const TYPES = [
+  { key: 'resident', label: '常駐電源',   desc: '長期插著不拔' },
+  { key: 'flex',     label: '彈性電源',   desc: '短暫使用'     },
+  { key: 'seasonal', label: '季節性家電', desc: '窗邊／牆角'   },
+  { key: 'high',     label: '高功率家電', desc: '廚房電器櫃'   },
+  { key: 'indirect', label: '間接照明',   desc: '燈具'         },
+  { key: 'direct',   label: '直接照明',   desc: '燈具'         },
+  { key: 'accent',   label: '重點照明',   desc: '燈具'         },
+];
+
+let projects = [];       // list of project names
+let currentProject = ''; // active project name
+let zones = [];
+let nextId = 1;
+let saveTimer = null;
+let dragSrcId = null;
+
+// ── Icons ──
+const ICONS = {
+  plus:    '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  trash:   '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>',
+  chevron: '<polyline points="6 9 12 15 18 9"/>',
+};
+function icon(name, size=14) {
+  return `<svg viewBox="0 0 24 24" style="width:${size}px;height:${size}px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${ICONS[name]}</svg>`;
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Sync status ──
+function setSyncStatus(state, text) {
+  const el = document.getElementById('sync-status');
+  el.className = 'sync-badge sync-' + state;
+  el.innerHTML = `<span class="sync-dot"></span>${text}`;
+}
+
+// ── API calls ──
+async function api(params, body=null) {
+  const url = API_URL + (params ? '?' + new URLSearchParams(params) : '');
+  if (body) {
+    const res = await fetch(url, { method:'POST', body: JSON.stringify(body) });
+    return res.json();
+  } else {
+    const res = await fetch(url);
+    return res.json();
+  }
+}
+
+// ── Load project list ──
+async function loadProjects() {
+  setSyncStatus('busy', '載入中…');
+  try {
+    const data = await api({ action: 'list' });
+    projects = data.projects || [];
+    renderSidebar();
+    if (projects.length > 0) {
+      switchProject(projects[0]);
+    } else {
+      setSyncStatus('ok', '已連線');
+    }
+  } catch(e) {
+    setSyncStatus('err', '連線失敗');
+  }
+}
+
+// ── Load zones for a project ──
+async function loadProject(name) {
+  if (!name) return;
+  setSyncStatus('busy', '讀取中…');
+  try {
+    const data = await api({ action: 'get', project: name });
+    zones = data.zones || [];
+    nextId = zones.length
+      ? Math.max(...zones.flatMap(z => [z.id, ...z.items.map(i=>i.id)])) + 1
+      : 1;
+    renderMain();
+    setSyncStatus('ok', '已同步');
+  } catch(e) {
+    setSyncStatus('err', '讀取失敗');
+  }
+}
+
+// ── Save ──
+async function saveProject() {
+  if (!currentProject) return;
+  setSyncStatus('busy', '儲存中…');
+  try {
+    await api(null, { action:'set', project: currentProject, zones });
+    setSyncStatus('ok', '已儲存');
+  } catch(e) {
+    setSyncStatus('err', '儲存失敗');
+  }
+}
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveProject, 1200);
+}
+
+// ── Switch project ──
+function switchProject(name) {
+  currentProject = name;
+  renderSidebar();
+  loadProject(name);
+}
+
+// ── Add project ──
+async function addProject() {
+  const inp = document.getElementById('new-proj-input');
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  if (projects.includes(name)) { alert('已有同名專案'); return; }
+  projects.push(name);
+  inp.value = '';
+  zones = [];
+  currentProject = name;
+  renderSidebar();
+  renderMain();
+  await saveProject();
+}
+
+// ── Delete project ──
+async function deleteProject(name) {
+  if (!confirm(`確定要刪除專案「${name}」及所有資料？`)) return;
+  setSyncStatus('busy', '刪除中…');
+  try {
+    await api(null, { action:'delete', project: name });
+    projects = projects.filter(p => p !== name);
+    if (currentProject === name) {
+      currentProject = '';
+      zones = [];
+      document.getElementById('main-content').innerHTML = `
+        <div id="empty-state">
+          <div class="big">📋</div>
+          <p>從左側選擇或新增專案</p>
+        </div>`;
+    }
+    renderSidebar();
+    setSyncStatus('ok', '已刪除');
+  } catch(e) {
+    setSyncStatus('err', '刪除失敗');
+  }
+}
+
+// ── Sidebar ──
+function renderSidebar() {
+  const el = document.getElementById('proj-list');
+  if (projects.length === 0) {
+    el.innerHTML = `<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>`;
+    return;
+  }
+  el.innerHTML = projects.map(p => `
+    <div class="proj-item ${p===currentProject?'active':''}" id="proj_${CSS.escape(p)}"
+         draggable="true" onclick="switchProject('${esc(p)}')" title="雙擊修改名稱" ondblclick="startRename(event,'${esc(p)}')">
+      <span class="proj-drag" onclick="event.stopPropagation()" title="拖曳排序">
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none">
+          <circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/>
+          <circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/>
+          <circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/>
+        </svg>
+      </span>
+      <span class="proj-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p)}</span>
+      <button class="proj-del" onclick="event.stopPropagation();deleteProject('${esc(p)}')" title="刪除專案">
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </button>
+    </div>
+  `).join('');
+  initProjDrag();
+}
+
+// ── Rename project ──
+function startRename(e, name) {
+  e.stopPropagation();
+  const item = document.getElementById('proj_' + CSS.escape(name));
+  if (!item) return;
+  const label = item.querySelector('.proj-label');
+  const inp = document.createElement('input');
+  inp.className = 'proj-rename-input';
+  inp.value = name;
+  inp.onclick = e => e.stopPropagation();
+  label.replaceWith(inp);
+  inp.focus(); inp.select();
+  async function commitRename() {
+    const newName = inp.value.trim();
+    if (!newName || newName === name) { renderSidebar(); return; }
+    if (projects.includes(newName)) { alert('已有同名專案'); renderSidebar(); return; }
+    setSyncStatus('busy', '更名中…');
+    try {
+      // Copy data under new name, delete old
+      const data = await api({ action:'get', project: name });
+      await api(null, { action:'set', project: newName, zones: data.zones||[] });
+      await api(null, { action:'delete', project: name });
+      const idx = projects.indexOf(name);
+      projects[idx] = newName;
+      if (currentProject === name) {
+        currentProject = newName;
+        const titleEl = document.querySelector('.proj-title');
+        if (titleEl) titleEl.textContent = newName;
+      }
+      renderSidebar();
+      setSyncStatus('ok', '已更名');
+    } catch(err) {
+      setSyncStatus('err', '更名失敗'); renderSidebar();
+    }
+  }
+  inp.addEventListener('blur', commitRename);
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { inp.blur(); }
+    if (e.key === 'Escape') { inp.removeEventListener('blur', commitRename); renderSidebar(); }
+  });
+}
+
+// ── Proj drag & drop ──
+let projDragSrc = null;
+function initProjDrag() {
+  document.querySelectorAll('.proj-item').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      projDragSrc = el.id.replace('proj_','');
+      el.classList.add('proj-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('proj-dragging');
+      document.querySelectorAll('.proj-item').forEach(x => x.classList.remove('proj-drag-over'));
+    });
+    el.addEventListener('dragover', e => {
+      e.preventDefault();
+      document.querySelectorAll('.proj-item').forEach(x => x.classList.remove('proj-drag-over'));
+      const tid = el.id.replace('proj_','');
+      if (tid !== projDragSrc) el.classList.add('proj-drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('proj-drag-over'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      const tid = el.id.replace('proj_','');
+      if (tid === projDragSrc) return;
+      const si = projects.indexOf(decodeURIComponent(projDragSrc));
+      const ti = projects.indexOf(decodeURIComponent(tid));
+      if (si<0||ti<0) return;
+      const [m] = projects.splice(si,1);
+      projects.splice(ti,0,m);
+      renderSidebar();
+    });
+  });
+}
+
+// ── Main content ──
+function renderMain() {
+  const el = document.getElementById('main-content');
+  el.innerHTML = `
+    <div class="proj-header">
+      <div class="proj-title">${esc(currentProject)}</div>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="add-bar">
+      <select id="newZone">
+        <option value="">選擇空間…</option>
+        <option>客廳</option><option>主臥</option><option>次臥</option>
+        <option>書房</option><option>廚房</option><option>餐廳</option>
+        <option>浴室</option><option>陽台</option><option>玄關</option>
+        <option>車庫</option><option>儲藏室</option><option>其他</option>
+      </select>
+      <input type="text" id="customZone" placeholder="或自訂空間名稱…">
+      <button class="btn btn-primary" onclick="addZone()">
+        ${icon('plus')} 新增空間
+      </button>
+      <div class="sep"></div>
+      <span style="font-size:12px;color:var(--text3)">共 <span id="totalZones">0</span> 個空間</span>
+    </div>
+    <div id="zones"></div>
+  `;
+  document.getElementById('customZone').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addZone();
+  });
+  renderZones();
+}
+
+// ── Summary ──
+function renderSummary() {
+  const el = document.getElementById('summary');
+  if (!el) return;
+  const total = zones.reduce((a,z) => a+z.items.length, 0);
+  const c = { resident:0, flex:0, seasonal:0, high:0, indirect:0, direct:0, accent:0 };
+  zones.forEach(z => z.items.forEach(i => { if(c[i.type]!==undefined) c[i.type]++; }));
+  const lighting = c.indirect + c.direct + c.accent;
+  document.getElementById('totalZones').textContent = zones.length;
+  el.innerHTML = `
+    <div class="scard"><div class="lbl">空間數</div><div class="val">${zones.length}</div><div class="sub">個區域</div></div>
+    <div class="scard"><div class="lbl">設備總數</div><div class="val">${total}</div><div class="sub">項設備</div></div>
+    <div class="scard c-resident"><div class="lbl">常駐電源</div><div class="val">${c.resident}</div><div class="sub">長期插著</div></div>
+    <div class="scard c-flex"><div class="lbl">彈性電源</div><div class="val">${c.flex}</div><div class="sub">短暫使用</div></div>
+    <div class="scard c-seasonal"><div class="lbl">季節性家電</div><div class="val">${c.seasonal}</div><div class="sub">窗邊／牆角</div></div>
+    <div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">${c.high}</div><div class="sub">廚房電器櫃</div></div>
+    <div class="scard c-lighting"><div class="lbl">燈具</div><div class="val">${lighting}</div><div class="sub">間接／直接／重點</div></div>
+  `;
+}
+
+// ── Zones ──
+function renderZones() {
+  renderSummary();
+  const el = document.getElementById('zones');
+  if (!el) return;
+  el.innerHTML = '';
+  zones.forEach(z => {
+    const div = document.createElement('div');
+    div.className = 'zone'; div.id = 'zone_'+z.id; div.draggable = true;
+    const rows = z.items.map((it,i) => {
+      const opts = TYPES.map(t =>
+        `<option value="${t.key}"${it.type===t.key?' selected':''}>${t.label}（${t.desc}）</option>`
+      ).join('');
+      return `<tr id="row_${it.id}">
+        <td class="num-col">${String(i+1).padStart(2,'0')}</td>
+        <td><input type="text" value="${esc(it.name)}" oninput="upd(${z.id},${it.id},'name',this.value)" placeholder="設備名稱"></td>
+        <td style="width:145px"><input type="text" value="${esc(it.size)}" oninput="upd(${z.id},${it.id},'size',this.value)" placeholder="尺寸 / 瓦數"></td>
+        <td style="width:170px"><select onchange="upd(${z.id},${it.id},'type',this.value)">${opts}</select></td>
+        <td style="width:95px"><input type="text" value="${esc(it.height)}" oninput="upd(${z.id},${it.id},'height',this.value)" placeholder="高度"></td>
+        <td><input type="text" value="${esc(it.note)}" oninput="upd(${z.id},${it.id},'note',this.value)" placeholder="備註"></td>
+        <td style="width:34px"><button class="del-btn" onclick="delItem(${z.id},${it.id})">${icon('trash',13)}</button></td>
+      </tr>`;
+    }).join('');
+    div.innerHTML = `
+      <div class="zone-head" onclick="toggleZone(${z.id})">
+        <span class="drag-handle" onclick="event.stopPropagation()">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none">
+            <circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/>
+            <circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/>
+            <circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>
+          </svg>
+        </span>
+        <span class="zone-name">${esc(z.name)}</span>
+        <span class="zone-count">${z.items.length} 項</span>
+        <span class="zone-spacer"></span>
+        <button class="del-zone" onclick="event.stopPropagation();delZone(${z.id})">${icon('trash',12)} 刪除空間</button>
+        <span class="zone-chevron ${z.open?'open':''}">${icon('chevron')}</span>
+      </div>
+      <div class="zone-body" ${z.open?'':'style="display:none"'}>
+        <table>
+          <thead><tr>
+            <th>#</th><th>設備名稱</th><th>尺寸 / 瓦數</th><th>類型</th><th>高度</th><th>備註</th><th></th>
+          </tr></thead>
+          <tbody>${rows||'<tr><td colspan="7" class="tbl-empty">尚未新增設備</td></tr>'}</tbody>
+        </table>
+        <div class="add-item-row">
+          <button class="btn btn-sm" onclick="addItem(${z.id})">${icon('plus')} 新增設備</button>
+        </div>
+      </div>`;
+    el.appendChild(div);
+  });
+  initDrag();
+}
+
+// ── Drag & drop ──
+function initDrag() {
+  document.querySelectorAll('.zone').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      dragSrcId = parseInt(el.id.replace('zone_',''));
+      el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      document.querySelectorAll('.zone').forEach(z => z.classList.remove('drag-over'));
+    });
+    el.addEventListener('dragover', e => {
+      e.preventDefault();
+      document.querySelectorAll('.zone').forEach(z => z.classList.remove('drag-over'));
+      const tid = parseInt(el.id.replace('zone_',''));
+      if (tid !== dragSrcId) el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      const tid = parseInt(el.id.replace('zone_',''));
+      if (tid === dragSrcId) return;
+      const si = zones.findIndex(z => z.id===dragSrcId);
+      const ti = zones.findIndex(z => z.id===tid);
+      const [m] = zones.splice(si,1); zones.splice(ti,0,m);
+      renderZones(); scheduleSave();
+    });
+  });
+}
+
+// ── CRUD ──
+function toggleZone(id) {
+  const z = zones.find(x=>x.id===id);
+  if (z) { z.open=!z.open; renderZones(); }
+}
+function addZone() {
+  const sel = document.getElementById('newZone');
+  const cust = document.getElementById('customZone');
+  const name = (cust.value.trim()||sel.value).trim();
+  if (!name) { cust.focus(); return; }
+  zones.push({ id:nextId++, name, open:true, items:[] });
+  sel.value=''; cust.value='';
+  renderZones(); scheduleSave();
+}
+function delZone(id) {
+  if (!confirm('確定要刪除這個空間及其所有設備？')) return;
+  zones = zones.filter(z=>z.id!==id);
+  renderZones(); scheduleSave();
+}
+function addItem(zid) {
+  const z = zones.find(x=>x.id===zid);
+  if (!z) return;
+  z.items.push({ id:nextId++, name:'', size:'', type:'resident', height:'', note:'' });
+  z.open=true; renderZones(); scheduleSave();
+  setTimeout(() => {
+    const rows = document.querySelectorAll(`#zone_${zid} tbody tr`);
+    const last = rows[rows.length-1];
+    if (last) last.querySelector('input')?.focus();
+  }, 50);
+}
+function delItem(zid,iid) {
+  const z = zones.find(x=>x.id===zid);
+  if (!z) return;
+  z.items = z.items.filter(i=>i.id!==iid);
+  renderZones(); scheduleSave();
+}
+function upd(zid,iid,field,val) {
+  const z = zones.find(x=>x.id===zid);
+  if (!z) return;
+  const it = z.items.find(i=>i.id===iid);
+  if (it) it[field]=val;
+  renderSummary();
+  const cnt = document.querySelector(`#zone_${zid} .zone-count`);
+  if (cnt) cnt.textContent = z.items.length+' 項';
+  scheduleSave();
+}
+
+// ── CSV ──
+function exportCSV() {
+  const BOM = '\uFEFF';
+  let rows = [['專案','空間','編號','設備名稱','尺寸／瓦數','類型','說明','插座高度','備註']];
+  zones.forEach(z => z.items.forEach((it,i) => {
+    const t = TYPES.find(x=>x.key===it.type)||TYPES[0];
+    rows.push([currentProject, z.name, i+1, it.name, it.size, t.label, t.desc, it.height, it.note]);
+  }));
+  const csv = BOM + rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download = `${currentProject}_插座需求表.csv`;
+  a.click();
+}
+
+// ── Init ──
+document.getElementById('new-proj-input').addEventListener('keydown', e => {
+  if (e.key==='Enter') addProject();
+});
+loadProjects();
+</script>
+</body>
+</html>
