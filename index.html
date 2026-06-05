@@ -442,7 +442,7 @@ function setSyncStatus(state, text) {
   el.innerHTML = `<span class="sync-dot"></span>${text}`;
 }
 
-// ── API calls ──
+// ── API calls (all via JSONP GET to avoid CORS) ──
 function jsonp(params) {
   return new Promise(function(resolve, reject) {
     const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
@@ -450,7 +450,7 @@ function jsonp(params) {
     const script = document.createElement('script');
     const timer = setTimeout(function() {
       cleanup(); reject(new Error('timeout'));
-    }, 10000);
+    }, 15000);
     function cleanup() { clearTimeout(timer); delete window[cb]; if (script.parentNode) script.parentNode.removeChild(script); }
     window[cb] = function(data) { cleanup(); resolve(data); };
     script.onerror = function() { cleanup(); reject(new Error('script error')); };
@@ -459,16 +459,12 @@ function jsonp(params) {
   });
 }
 
-async function apiPost(body) {
-  const form = new FormData();
-  form.append('data', JSON.stringify(body));
-  await fetch(API_URL, { method:'POST', body: form, mode:'no-cors' });
-}
-
 async function api(params, body=null) {
   if (body) {
-    await apiPost(body);
-    return { ok: true };
+    // Send write via JSONP GET with encoded payload
+    const p = Object.assign({}, body);
+    if (p.zones) p.zones = JSON.stringify(p.zones);
+    return await jsonp(p);
   } else {
     return await jsonp(params);
   }
