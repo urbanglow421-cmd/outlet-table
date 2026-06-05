@@ -835,12 +835,11 @@ function delItem(zid,iid) {
   renderZones(); scheduleSave();
 }
 function updateZoneFooter(zid) {
-  const z = zones.find(x=>x.id===zid);
+  const z = zones.find(function(x){return x.id===zid;});
   if (!z) return;
-  const EXCLUDE = ['flex'];
   let w110 = 0, w220 = 0;
-  z.items.forEach(it => {
-    if (EXCLUDE.includes(it.type)) return;
+  z.items.forEach(function(it) {
+    if (it.type === 'flex') return;
     const w = parseFloat(it.watt) || 0;
     if (it.volt === '220') w220 += w; else w110 += w;
   });
@@ -848,12 +847,13 @@ function updateZoneFooter(zid) {
   const a220 = w220 ? (w220/220).toFixed(1) : null;
   const footerEl = document.getElementById('footer_'+zid);
   if (!footerEl) return;
-  const parts = [];
-  if (a110) parts.push(`<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">${w110}W／${a110}A</span>`);
-  if (a220) parts.push(`<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">${w220}W／${a220}A</span>`);
-  footerEl.innerHTML = parts.length
-    ? `<span class="pwr-label">預估用電：</span>${parts.join('<span style="color:var(--border2)">｜</span>')}<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>`
-    : `<span style="color:var(--text3)">尚無耗電量資料</span>`;
+  let inner = '';
+  if (a110) inner += '<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
+  if (a110 && a220) inner += '<span style="color:var(--border2)">｜</span>';
+  if (a220) inner += '<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
+  footerEl.innerHTML = inner
+    ? '<span class="pwr-label">預估用電：</span>'+inner+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>'
+    : '<span style="color:var(--text3)">尚無耗電量資料</span>';
 }
 
 function upd(zid,iid,field,val) {
