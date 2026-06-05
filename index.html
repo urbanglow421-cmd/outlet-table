@@ -742,7 +742,7 @@ function renderZones() {
       return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
-        +'<td style="width:110px"><div style="display:flex;align-items:center;gap:4px">'
+        +'<td style="width:110px"><div class="volt-cell" style="display:flex;align-items:center;gap:4px">'
         +'<input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:60px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0">'
         +(it.type==='poe'
         ? '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span></div></td>'
@@ -750,7 +750,7 @@ function renderZones() {
           +'<option value="110"'+v110+'>110V</option>'
           +'<option value="220"'+v220+'>220V</option>'
           +'</select></div></td>')
-        +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+opts+'</select></td>'
+        +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+iid+',this.value)">'+opts+'</select></td>'
         +'<td style="width:90px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+zid+','+iid+',&quot;height&quot;,this.value)" placeholder="高度"></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+zid+','+iid+',&quot;note&quot;,this.value)" placeholder="備註"></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+zid+','+iid+')">'+icon('trash',13)+'</button></td>'
@@ -867,6 +867,25 @@ function delItem(zid,iid) {
   z.items = z.items.filter(i=>i.id!==iid);
   renderZones(); scheduleSave();
 }
+function updateVoltCell(iid, type) {
+  const row = document.getElementById('row_'+iid);
+  if (!row) return;
+  const voltCell = row.querySelector('.volt-cell');
+  if (!voltCell) return;
+  const allItems = zones.flatMap(function(z){return z.items;});
+  const it = allItems.find(function(i){return i.id===iid;});
+  if (type === 'poe') {
+    voltCell.innerHTML = '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>';
+  } else {
+    const v110 = (!it || (it.volt||'110')==='110') ? ' selected' : '';
+    const v220 = (it && it.volt==='220') ? ' selected' : '';
+    voltCell.innerHTML = '<select class="voltage-select" onchange="upd('+iid+','+iid+',\"volt\",this.value);updateZoneFooter(0)">'
+      +'<option value="110"'+v110+'>110V</option>'
+      +'<option value="220"'+v220+'>220V</option>'
+      +'</select>';
+  }
+}
+
 function updateZoneFooter(zid) {
   const z = zones.find(function(x){return x.id===zid;});
   if (!z) return;
