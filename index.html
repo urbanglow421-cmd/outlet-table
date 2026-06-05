@@ -446,7 +446,12 @@ function setSyncStatus(state, text) {
 function jsonp(params) {
   return new Promise(function(resolve, reject) {
     const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const url = API_URL + '?' + new URLSearchParams(Object.assign({}, params, {callback: cb}));
+    const merged = Object.assign({}, params, {callback: cb});
+    // Build URL manually to avoid encoding issues with large JSON
+    const parts = Object.keys(merged).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(merged[k]);
+    });
+    const url = API_URL + '?' + parts.join('&');
     const script = document.createElement('script');
     const timer = setTimeout(function() {
       cleanup(); reject(new Error('timeout'));
@@ -461,9 +466,16 @@ function jsonp(params) {
 
 async function api(params, body=null) {
   if (body) {
-    // Send write via JSONP GET with encoded payload
-    const p = Object.assign({}, body);
-    if (p.zones) p.zones = JSON.stringify(p.zones);
+    const p = {
+      action:   body.action  || '',
+      project:  body.project || '',
+      callback: ''  // will be set by jsonp()
+    };
+    if (body.zones !== undefined) {
+      p.zones = typeof body.zones === 'string'
+        ? body.zones
+        : JSON.stringify(body.zones);
+    }
     return await jsonp(p);
   } else {
     return await jsonp(params);
