@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>電源&插座需求表</title>
+<title>室內電源規劃表</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +16,7 @@
   --red: #8A1A1A; --red-light: #FDEAEA;
   --blue: #1A3A6B; --blue-light: #E8EEFB;
   --sidebar: 220px;
+  --legend: 200px;
   --radius: 8px; --radius-lg: 12px;
   --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
 }
@@ -86,6 +87,44 @@ aside {
 .proj-drag:active { cursor: grabbing; }
 .proj-item.proj-dragging { opacity: 0.35; }
 .proj-item.proj-drag-over { outline: 2px dashed var(--accent); outline-offset: -2px; border-radius: 4px; }
+
+/* ── Legend sidebar ── */
+.legend-aside {
+  width: var(--legend); flex-shrink: 0;
+  background: var(--surface); border-left: 1px solid var(--border);
+  position: sticky; top: 56px; height: calc(100vh - 56px);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.legend-head {
+  padding: 16px 14px 10px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  color: var(--text3); text-transform: uppercase;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.legend-body { padding: 12px 0; flex: 1; overflow-y: auto; }
+.legend-section {
+  padding: 6px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+.legend-section:last-child { border-bottom: none; }
+.legend-section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
+}
+.legend-item { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.legend-item:last-child { margin-bottom: 0; }
+.legend-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; margin-bottom: 2px;
+}
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.legend-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+.dot-resident { background: #1A3A6B; }
+.dot-flex     { background: #2C5F3F; }
+.dot-seasonal { background: #8A5C0A; }
+.dot-high     { background: #8A1A1A; }
+.dot-lighting { background: #6B3FA0; }
 
 .sidebar-add { padding: 12px; border-top: 1px solid var(--border); }
 .sidebar-add input {
@@ -165,6 +204,22 @@ main { flex: 1; min-width: 0; padding: 28px 28px 80px; overflow-y: auto; }
 .add-bar input[type=text] { width: 140px; }
 .sep { flex: 1; }
 
+/* ── Row colors by type ── */
+tbody tr.type-resident td { background: rgba(26,58,107,0.04); }
+tbody tr.type-flex     td { background: rgba(44,95,63,0.04); }
+tbody tr.type-seasonal td { background: rgba(138,92,10,0.04); }
+tbody tr.type-high     td { background: rgba(138,26,26,0.04); }
+tbody tr.type-direct   td { background: rgba(107,63,160,0.04); }
+tbody tr.type-indirect td { background: rgba(107,63,160,0.04); }
+tbody tr.type-accent   td { background: rgba(107,63,160,0.04); }
+tbody tr.type-resident:hover td { background: rgba(26,58,107,0.08); }
+tbody tr.type-flex:hover     td { background: rgba(44,95,63,0.08); }
+tbody tr.type-seasonal:hover td { background: rgba(138,92,10,0.08); }
+tbody tr.type-high:hover     td { background: rgba(138,26,26,0.08); }
+tbody tr.type-direct:hover   td { background: rgba(107,63,160,0.08); }
+tbody tr.type-indirect:hover td { background: rgba(107,63,160,0.08); }
+tbody tr.type-accent:hover   td { background: rgba(107,63,160,0.08); }
+
 /* ── Zones ── */
 .zone {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -236,7 +291,7 @@ td select:focus { border-color: var(--accent); }
     <div class="logo-icon">
       <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><circle cx="8" cy="11" r="1" fill="white" stroke="none"/><circle cx="16" cy="11" r="1" fill="white" stroke="none"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
     </div>
-    <div class="logo-text">電源<span>&amp;</span>插座需求表</div>
+    <div class="logo-text">室內<span>電源規劃表</span></div>
   </div>
   <div class="header-right">
     <span id="sync-status" class="sync-badge sync-busy"><span class="sync-dot"></span>連線中…</span>
@@ -276,19 +331,60 @@ td select:focus { border-color: var(--accent); }
       <p>從左側選擇或新增專案</p>
     </div>
   </main>
+
+  <!-- Legend sidebar -->
+  <aside class="legend-aside">
+    <div class="legend-head">類型說明</div>
+    <div class="legend-body">
+      <div class="legend-section">
+        <div class="legend-section-title">插座</div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-resident"></span>長期使用</div>
+          <div class="legend-desc">常駐電源，長期插著不拔。如電視、冰箱、路由器。</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-flex"></span>短暫使用</div>
+          <div class="legend-desc">彈性電源，偶爾使用後拔除。如吹風機、吸塵器、筆電。</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-seasonal"></span>窗邊／牆角</div>
+          <div class="legend-desc">季節性家電，依季節使用。如電風扇、電暖器、除濕機。</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div>
+          <div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div>
+        </div>
+      </div>
+      <div class="legend-section">
+        <div class="legend-section-title">燈具</div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>直接照明</div>
+          <div class="legend-desc">光源直接照射空間的主要照明。如吸頂燈、筒燈、軌道燈。</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>間接照明</div>
+          <div class="legend-desc">光源透過反射營造氛圍。如燈帶、崁燈、壁燈。</div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>重點照明</div>
+          <div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈、畫燈。</div>
+        </div>
+      </div>
+    </div>
+  </aside>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbylMfR4FmIslTy-tZB9JsDDEt8PLdOxU_R2xN0xF5Am2B1XdyUaC36maEzy9IPVec17/exec';
 
 const TYPES = [
-  { key: 'resident', label: '常駐電源',   desc: '長期插著不拔' },
-  { key: 'flex',     label: '彈性電源',   desc: '短暫使用'     },
-  { key: 'seasonal', label: '季節性家電', desc: '窗邊／牆角'   },
-  { key: 'high',     label: '高功率家電', desc: '廚房電器櫃'   },
-  { key: 'indirect', label: '間接照明',   desc: '燈具'         },
-  { key: 'direct',   label: '直接照明',   desc: '燈具'         },
-  { key: 'accent',   label: '重點照明',   desc: '燈具'         },
+  { key: 'resident', label: '長期使用',   desc: '常駐電源'   },
+  { key: 'flex',     label: '短暫使用',   desc: '彈性電源'   },
+  { key: 'seasonal', label: '窗邊／牆角', desc: '季節性家電' },
+  { key: 'high',     label: '高功率家電', desc: '獨立迴路'   },
+  { key: 'direct',   label: '直接照明',   desc: '燈具'       },
+  { key: 'indirect', label: '間接照明',   desc: '燈具'       },
+  { key: 'accent',   label: '重點照明',   desc: '燈具'       },
 ];
 
 let projects = [];       // list of project names
@@ -591,11 +687,11 @@ function renderZones() {
       const opts = TYPES.map(t =>
         `<option value="${t.key}"${it.type===t.key?' selected':''}>${t.label}（${t.desc}）</option>`
       ).join('');
-      return `<tr id="row_${it.id}">
+      return `<tr id="row_${it.id}" class="type-${it.type}">
         <td class="num-col">${String(i+1).padStart(2,'0')}</td>
         <td><input type="text" value="${esc(it.name)}" oninput="upd(${z.id},${it.id},'name',this.value)" placeholder="設備名稱"></td>
         <td style="width:145px"><input type="text" value="${esc(it.size)}" oninput="upd(${z.id},${it.id},'size',this.value)" placeholder="尺寸 / 瓦數"></td>
-        <td style="width:170px"><select onchange="upd(${z.id},${it.id},'type',this.value)">${opts}</select></td>
+        <td style="width:170px"><select onchange="upd(${z.id},${it.id},'type',this.value);this.closest('tr').className='type-'+this.value">${opts}</select></td>
         <td style="width:95px"><input type="text" value="${esc(it.height)}" oninput="upd(${z.id},${it.id},'height',this.value)" placeholder="高度"></td>
         <td><input type="text" value="${esc(it.note)}" oninput="upd(${z.id},${it.id},'note',this.value)" placeholder="備註"></td>
         <td style="width:34px"><button class="del-btn" onclick="delItem(${z.id},${it.id})">${icon('trash',13)}</button></td>
