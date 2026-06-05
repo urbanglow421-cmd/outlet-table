@@ -761,7 +761,7 @@ function renderZones() {
     let w110 = 0, w220 = 0;
     z.items.forEach(function(it) {
       if (it.type === 'flex' || it.type === 'poe') return;
-      const w = parseFloat(it.watt) || 0;
+      const w = (parseFloat(it.watt) || 0) * (parseInt(it.qty) || 1);
       if (it.volt === '220') w220 += w; else w110 += w;
     });
     const a110 = w110 ? (w110/110).toFixed(1) : null;
@@ -893,7 +893,7 @@ function updateZoneFooter(zid) {
   let w110 = 0, w220 = 0;
   z.items.forEach(function(it) {
     if (it.type === 'flex' || it.type === 'poe') return;
-    const w = parseFloat(it.watt) || 0;
+    const w = (parseFloat(it.watt) || 0) * (parseInt(it.qty) || 1);
     if (it.volt === '220') w220 += w; else w110 += w;
   });
   const a110 = w110 ? (w110/110).toFixed(1) : null;
