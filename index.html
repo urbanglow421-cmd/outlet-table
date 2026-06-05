@@ -125,6 +125,7 @@ aside {
 .dot-seasonal { background: #1A3A6B; }
 .dot-high     { background: #8A1A1A; }
 .dot-lighting { background: #6B3FA0; }
+.dot-poe      { background: #0E7C86; }
 
 .sidebar-add { padding: 12px; border-top: 1px solid var(--border); }
 .sidebar-add input {
@@ -219,6 +220,8 @@ tbody tr.type-high:hover     td { background: rgba(138,26,26,0.1); }
 tbody tr.type-direct:hover   td { background: rgba(107,63,160,0.1); }
 tbody tr.type-indirect:hover td { background: rgba(107,63,160,0.1); }
 tbody tr.type-accent:hover   td { background: rgba(107,63,160,0.1); }
+tbody tr.type-poe      td { background: rgba(14,124,134,0.05); }
+tbody tr.type-poe:hover td { background: rgba(14,124,134,0.1); }
 
 /* ── Zones ── */
 .zone {
@@ -387,6 +390,13 @@ td select:focus { border-color: var(--accent); }
           <div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈、畫燈。</div>
         </div>
       </div>
+      <div class="legend-section">
+        <div class="legend-section-title">網路供電</div>
+        <div class="legend-item">
+          <div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE 供電</div>
+          <div class="legend-desc">透過網路線供電，不需要插座。如 IP 攝影機、無線基地台、門禁讀卡機。</div>
+        </div>
+      </div>
     </div>
   </aside>
 </div>
@@ -402,6 +412,7 @@ const TYPES = [
   { key: 'direct',   label: '直接照明',   desc: '燈具'       },
   { key: 'indirect', label: '間接照明',   desc: '燈具'       },
   { key: 'accent',   label: '重點照明',   desc: '燈具'       },
+  { key: 'poe',      label: 'PoE 供電',   desc: '網路線供電' },
 ];
 
 let projects = [];       // list of project names
@@ -696,7 +707,7 @@ function renderSummary() {
   const el = document.getElementById('summary');
   if (!el) return;
   const total = zones.reduce((a,z) => a+z.items.length, 0);
-  const c = { resident:0, flex:0, seasonal:0, high:0, indirect:0, direct:0, accent:0 };
+  const c = { resident:0, flex:0, seasonal:0, high:0, indirect:0, direct:0, accent:0, poe:0 };
   zones.forEach(z => z.items.forEach(i => { if(c[i.type]!==undefined) c[i.type]++; }));
   const lighting = c.indirect + c.direct + c.accent;
   document.getElementById('totalZones').textContent = zones.length;
@@ -733,10 +744,12 @@ function renderZones() {
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
         +'<td style="width:110px"><div style="display:flex;align-items:center;gap:4px">'
         +'<input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:60px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0">'
-        +'<select class="voltage-select" onchange="upd('+zid+','+iid+',&quot;volt&quot;,this.value);updateZoneFooter('+zid+')">'
-        +'<option value="110"'+v110+'>110V</option>'
-        +'<option value="220"'+v220+'>220V</option>'
-        +'</select></div></td>'
+        +(it.type==='poe'
+        ? '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span></div></td>'
+        : '<select class="voltage-select" onchange="upd('+zid+','+iid+',&quot;volt&quot;,this.value);updateZoneFooter('+zid+')">'
+          +'<option value="110"'+v110+'>110V</option>'
+          +'<option value="220"'+v220+'>220V</option>'
+          +'</select></div></td>')
         +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+opts+'</select></td>'
         +'<td style="width:90px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+zid+','+iid+',&quot;height&quot;,this.value)" placeholder="高度"></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+zid+','+iid+',&quot;note&quot;,this.value)" placeholder="備註"></td>'
@@ -746,7 +759,7 @@ function renderZones() {
 
     let w110 = 0, w220 = 0;
     z.items.forEach(function(it) {
-      if (it.type === 'flex') return;
+      if (it.type === 'flex' || it.type === 'poe') return;
       const w = parseFloat(it.watt) || 0;
       if (it.volt === '220') w220 += w; else w110 += w;
     });
@@ -859,7 +872,7 @@ function updateZoneFooter(zid) {
   if (!z) return;
   let w110 = 0, w220 = 0;
   z.items.forEach(function(it) {
-    if (it.type === 'flex') return;
+    if (it.type === 'flex' || it.type === 'poe') return;
     const w = parseFloat(it.watt) || 0;
     if (it.volt === '220') w220 += w; else w110 += w;
   });
