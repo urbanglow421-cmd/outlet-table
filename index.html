@@ -739,18 +739,18 @@ function renderZones() {
       const v110 = (it.volt||'110')==='110' ? ' selected' : '';
       const v220 = it.volt==='220' ? ' selected' : '';
       const zid = z.id, iid = it.id;
-      return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
-        +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
-        +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
-        +'<td style="width:110px"><div class="volt-cell" style="display:flex;align-items:center;gap:4px">'
-        +'<input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:60px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0">'
-        +(it.type==='poe'
-        ? '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span></div></td>'
+      const voltWidget = it.type==='poe'
+        ? '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>'
         : '<select class="voltage-select" onchange="upd('+zid+','+iid+',&quot;volt&quot;,this.value);updateZoneFooter('+zid+')">'
           +'<option value="110"'+v110+'>110V</option>'
           +'<option value="220"'+v220+'>220V</option>'
-          +'</select></div></td>')
+          +'</select>';
+      return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
+        +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
+        +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
         +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+iid+',this.value)">'+opts+'</select></td>'
+        +'<td style="width:70px"><div class="volt-cell">'+voltWidget+'</div></td>'
+        +'<td style="width:90px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:70px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0"></td>'
         +'<td style="width:90px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+zid+','+iid+',&quot;height&quot;,this.value)" placeholder="高度"></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+zid+','+iid+',&quot;note&quot;,this.value)" placeholder="備註"></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+zid+','+iid+')">'+icon('trash',13)+'</button></td>'
@@ -790,9 +790,9 @@ function renderZones() {
       +'</div>'
       +'<div class="zone-body"'+bodyStyle+'>'
       +'<table><thead><tr>'
-      +'<th>#</th><th>設備名稱</th><th>耗電量</th><th>類型</th><th>高度</th><th>備註</th><th></th>'
+      +'<th>#</th><th>設備名稱</th><th>類型</th><th>電壓</th><th>耗電量</th><th>高度</th><th>備註</th><th></th>'
       +'</tr></thead>'
-      +'<tbody>'+(rows||'<tr><td colspan="7" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
+      +'<tbody>'+(rows||'<tr><td colspan="8" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
       +'</table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml
