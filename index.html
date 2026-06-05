@@ -739,7 +739,6 @@ function renderZones() {
     const footerHtml = footerParts.length
       ? `<div class="zone-footer" id="footer_${z.id}"><span class="pwr-label">預估用電：</span>${footerParts.join('<span style="color:var(--border2)">｜</span>')}<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span></div>`
       : `<div class="zone-footer" id="footer_${z.id}" style="color:var(--text3)">尚無耗電量資料</div>`;
-    }).join('');
     div.innerHTML = `
       <div class="zone-head" onclick="toggleZone(${z.id})">
         <span class="drag-handle" onclick="event.stopPropagation()">
