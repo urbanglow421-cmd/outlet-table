@@ -748,6 +748,7 @@ function renderZones() {
       return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
+        +'<td style="width:60px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+zid+','+iid+',&quot;qty&quot;,this.value)" style="width:50px;font-family:monospace;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0;text-align:center"></td>'
         +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+iid+',this.value)">'+opts+'</select></td>'
         +'<td style="width:70px"><div class="volt-cell">'+voltWidget+'</div></td>'
         +'<td style="width:90px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:70px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0"></td>'
@@ -790,9 +791,9 @@ function renderZones() {
       +'</div>'
       +'<div class="zone-body"'+bodyStyle+'>'
       +'<table><thead><tr>'
-      +'<th>#</th><th>設備名稱</th><th>類型</th><th>電壓</th><th>耗電量</th><th>高度</th><th>備註</th><th></th>'
+      +'<th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th>'
       +'</tr></thead>'
-      +'<tbody>'+(rows||'<tr><td colspan="8" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
+      +'<tbody>'+(rows||'<tr><td colspan="9" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
       +'</table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml
@@ -853,7 +854,7 @@ function delZone(id) {
 function addItem(zid) {
   const z = zones.find(x=>x.id===zid);
   if (!z) return;
-  z.items.push({ id:nextId++, name:'', watt:'', volt:'110', type:'resident', height:'', note:'' });
+  z.items.push({ id:nextId++, name:'', qty:1, watt:'', volt:'110', type:'resident', height:'', note:'' });
   z.open=true; renderZones(); scheduleSave();
   setTimeout(() => {
     const rows = document.querySelectorAll(`#zone_${zid} tbody tr`);
@@ -923,10 +924,10 @@ function upd(zid,iid,field,val) {
 // ── CSV ──
 function exportCSV() {
   const BOM = '\uFEFF';
-  let rows = [['專案','空間','編號','設備名稱','耗電量(W)','電壓','類型','高度','備註']];
+  let rows = [['專案','空間','編號','設備名稱','數量','類型','電壓','耗電量(W)','插座／設備高度','備註']];
   zones.forEach(z => z.items.forEach((it,i) => {
     const t = TYPES.find(x=>x.key===it.type)||TYPES[0];
-    rows.push([currentProject, z.name, i+1, it.name, it.watt||'', (it.volt||'110')+'V', t.label, it.height, it.note]);
+    rows.push([currentProject, z.name, i+1, it.name, it.qty||1, t.label, (it.volt||'110')+'V', it.watt||'', it.height, it.note]);
   }));
   const csv = BOM + rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const a = document.createElement('a');
