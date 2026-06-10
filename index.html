@@ -738,7 +738,7 @@ function renderZones() {
   el.innerHTML = '';
   zones.forEach(function(z) {
     const div = document.createElement('div');
-    div.className = 'zone'; div.id = 'zone_'+z.id; div.draggable = false;
+    div.className = 'zone'; div.id = 'zone_'+z.id; 
 
     const rows = z.items.map(function(it,i) {
       const opts = TYPES.map(function(t) {
@@ -810,152 +810,69 @@ function renderZones() {
   });
   initDrag();
 }
-// ── Drag & drop ──
+// ── Drag & drop (handle-only, mouse-based) ──
 function initDrag() {
-  document.querySelectorAll('.zone').forEach(el => {
-    // Only enable drag when grabbing the handle
+  document.querySelectorAll('.zone').forEach(function(el) {
     var handle = el.querySelector('.drag-handle');
-    if (handle) {
-      handle.addEventListener('mousedown', function() { el.draggable = true; });
-      handle.addEventListener('mouseleave', function() { if (!el.classList.contains('dragging')) el.draggable = false; });
-    }
-    el.addEventListener('dragstart', e => {
-      dragSrcId = parseInt(el.id.replace('zone_',''));
-      el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
-    });
-    el.addEventListener('dragend', () => {
-      el.draggable = false;
-      el.classList.remove('dragging');
-      document.querySelectorAll('.zone').forEach(z => z.classList.remove('drag-over'));
-    });
-    el.addEventListener('dragover', e => {
+    if (!handle) return;
+
+    handle.addEventListener('mousedown', function(e) {
       e.preventDefault();
-      document.querySelectorAll('.zone').forEach(z => z.classList.remove('drag-over'));
-      const tid = parseInt(el.id.replace('zone_',''));
-      if (tid !== dragSrcId) el.classList.add('drag-over');
-    });
-    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
-    el.addEventListener('drop', e => {
-      e.preventDefault();
-      const tid = parseInt(el.id.replace('zone_',''));
-      if (tid === dragSrcId) return;
-      const si = zones.findIndex(z => z.id===dragSrcId);
-      const ti = zones.findIndex(z => z.id===tid);
-      const [m] = zones.splice(si,1); zones.splice(ti,0,m);
-      renderZones(); scheduleSave();
+      var zoneEl = el;
+      var container = document.getElementById('zones');
+      var startY = e.clientY;
+      var rect = zoneEl.getBoundingClientRect();
+      var offsetY = e.clientY - rect.top;
+
+      // Create ghost
+      var ghost = zoneEl.cloneNode(true);
+      ghost.style.cssText = 'position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.15);';
+      document.body.appendChild(ghost);
+      zoneEl.style.opacity = '0.3';
+
+      var placeholder = document.createElement('div');
+      placeholder.style.cssText = 'height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
+      zoneEl.parentNode.insertBefore(placeholder, zoneEl);
+      zoneEl.style.display = 'none';
+
+      function onMove(e) {
+        ghost.style.top = (e.clientY - offsetY) + 'px';
+        // Find insertion point
+        var zones = Array.from(container.querySelectorAll('.zone:not([style*="display: none"])'));
+        var insertBefore = null;
+        for (var i = 0; i < zones.length; i++) {
+          var r = zones[i].getBoundingClientRect();
+          if (e.clientY < r.top + r.height / 2) { insertBefore = zones[i]; break; }
+        }
+        if (insertBefore) container.insertBefore(placeholder, insertBefore);
+        else container.appendChild(placeholder);
+      }
+
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        ghost.remove();
+        zoneEl.style.opacity = '';
+        zoneEl.style.display = '';
+        container.insertBefore(zoneEl, placeholder);
+        placeholder.remove();
+
+        // Update zones array to match new DOM order
+        var newOrder = Array.from(container.querySelectorAll('.zone')).map(function(z) {
+          return parseInt(z.id.replace('zone_',''));
+        });
+        var reordered = [];
+        newOrder.forEach(function(id) {
+          var z = window._zones.find(function(z){return z.id===id;});
+          if (z) reordered.push(z);
+        });
+        zones = reordered;
+        window._zones = reordered;
+        scheduleSave();
+      }
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
     });
   });
 }
-
-// ── CRUD ──
-function toggleZone(id) {
-  const z = zones.find(x=>x.id===id);
-  if (z) { z.open=!z.open; renderZones(); }
-}
-function addZone() {
-  const sel = document.getElementById('newZone');
-  const cust = document.getElementById('customZone');
-  const name = (cust.value.trim()||sel.value).trim();
-  if (!name) { cust.focus(); return; }
-  zones.push({ id:nextId++, name, open:true, items:[] });
-  sel.value=''; cust.value='';
-  renderZones(); scheduleSave();
-}
-function delZone(id) {
-  if (!confirm('確定要刪除這個空間及其所有設備？')) return;
-  zones = zones.filter(z=>z.id!==id);
-  renderZones(); scheduleSave();
-}
-function addItem(zid) {
-  const z = zones.find(x=>x.id===zid);
-  if (!z) return;
-  z.items.push({ id:nextId++, name:'', qty:1, watt:'', volt:'110', type:'resident', height:'', note:'' });
-  z.open=true; renderZones(); scheduleSave();
-  setTimeout(() => {
-    const rows = document.querySelectorAll(`#zone_${zid} tbody tr`);
-    const last = rows[rows.length-1];
-    if (last) last.querySelector('input')?.focus();
-  }, 50);
-}
-function delItem(zid,iid) {
-  const z = zones.find(x=>x.id===zid);
-  if (!z) return;
-  z.items = z.items.filter(i=>i.id!==iid);
-  renderZones(); scheduleSave();
-}
-function updateVoltCell(iid, type) {
-  const row = document.getElementById('row_'+iid);
-  if (!row) return;
-  const voltCell = row.querySelector('.volt-cell');
-  if (!voltCell) return;
-  const allItems = zones.flatMap(function(z){return z.items;});
-  const it = allItems.find(function(i){return i.id===iid;});
-  if (type === 'poe') {
-    voltCell.innerHTML = '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>';
-  } else {
-    const v110 = (!it || (it.volt||'110')==='110') ? ' selected' : '';
-    const v220 = (it && it.volt==='220') ? ' selected' : '';
-    voltCell.innerHTML = '<select class="voltage-select" onchange="upd('+iid+','+iid+',\"volt\",this.value);updateZoneFooter(0)">'
-      +'<option value="110"'+v110+'>110V</option>'
-      +'<option value="220"'+v220+'>220V</option>'
-      +'</select>';
-  }
-}
-
-function updateZoneFooter(zid) {
-  const z = zones.find(function(x){return x.id===zid;});
-  if (!z) return;
-  let w110 = 0, w220 = 0;
-  z.items.forEach(function(it) {
-    if (it.type === 'flex' || it.type === 'poe') return;
-    const w = (parseFloat(it.watt) || 0) * (parseInt(it.qty) || 1);
-    if (it.volt === '220') w220 += w; else w110 += w;
-  });
-  const a110 = w110 ? (w110/110).toFixed(1) : null;
-  const a220 = w220 ? (w220/220).toFixed(1) : null;
-  const footerEl = document.getElementById('footer_'+zid);
-  if (!footerEl) return;
-  let inner = '';
-  if (a110) inner += '<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
-  if (a110 && a220) inner += '<span style="color:var(--border2)">｜</span>';
-  if (a220) inner += '<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
-  footerEl.innerHTML = inner
-    ? '<span class="pwr-label">預估用電：</span>'+inner+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>'
-    : '<span style="color:var(--text3)">尚無耗電量資料</span>';
-}
-
-function upd(zid,iid,field,val) {
-  const z = zones.find(x=>x.id===zid);
-  if (!z) return;
-  const it = z.items.find(i=>i.id===iid);
-  if (it) it[field]=val;
-  renderSummary();
-  const cnt = document.querySelector(`#zone_${zid} .zone-count`);
-  if (cnt) cnt.textContent = z.items.length+' 項';
-  updateZoneFooter(zid);
-  scheduleSave();
-}
-
-// ── CSV ──
-function exportCSV() {
-  const BOM = '\uFEFF';
-  let rows = [['專案','空間','編號','設備名稱','數量','類型','電壓','耗電量(W)','插座／設備高度','備註']];
-  zones.forEach(z => z.items.forEach((it,i) => {
-    const t = TYPES.find(x=>x.key===it.type)||TYPES[0];
-    rows.push([currentProject, z.name, i+1, it.name, it.qty||1, t.label, (it.volt||'110')+'V', it.watt||'', it.height, it.note]);
-  }));
-  const csv = BOM + rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download = `${currentProject}_插座需求表.csv`;
-  a.click();
-}
-
-// ── Init ──
-document.getElementById('new-proj-input').addEventListener('keydown', e => {
-  if (e.key==='Enter') addProject();
-});
-loadProjects();
-</script>
-</body>
-</html>
