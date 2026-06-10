@@ -282,7 +282,16 @@ td select:focus { border-color: var(--accent); }
   background: transparent; cursor: pointer; color: var(--text3); transition: all 0.15s;
 }
 .del-zone:hover { background: var(--red-light); color: var(--red); border-color: var(--red-light); }
+.del-zone.locked { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 .del-zone svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+.lock-btn {
+  display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: transparent; cursor: pointer; color: var(--text3); transition: all 0.15s;
+}
+.lock-btn:hover { background: var(--surface2); color: var(--text); }
+.lock-btn.active { background: var(--amber-light); color: var(--amber); border-color: var(--amber-light); }
+.lock-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 .add-item-row { padding: 9px 12px; border-top: 1px solid var(--border); background: var(--surface2); }
 .tbl-empty { text-align: center; padding: 28px; color: var(--text3); font-size: 13px; }
 
@@ -754,6 +763,7 @@ function renderZones() {
           +'<option value="220"'+v220+'>220V</option>'
           +'</select>';
       return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
+        +'<td style="width:20px;padding:8px 4px;cursor:grab;color:var(--text3)" class="row-drag-handle"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none;display:block;margin:auto"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></td>'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
         +'<td style="width:60px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+zid+','+iid+',&quot;qty&quot;,this.value)" style="width:50px;font-family:monospace;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0;text-align:center"></td>'
@@ -794,14 +804,19 @@ function renderZones() {
       +'<span class="zone-name">'+esc(z.name)+'</span>'
       +'<span class="zone-count">'+z.items.length+' 項</span>'
       +'<span class="zone-spacer"></span>'
-      +'<button class="del-zone" onclick="event.stopPropagation();delZone('+z.id+')">'+icon('trash',12)+' 刪除空間</button>'
+      +'<button class="lock-btn'+(z.locked?' active':'')+'" onclick="event.stopPropagation();toggleLock('+z.id+')" title="'+(z.locked?'解除鎖定':'鎖定防誤刪')+'">'
+      +(z.locked
+        ? '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 已鎖定'
+        : '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> 鎖定')
+      +'</button>'
+      +'<button class="del-zone'+(z.locked?' locked':'')+'" onclick="event.stopPropagation();delZone('+z.id+')">'+icon('trash',12)+' 刪除空間</button>'
       +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
       +'</div>'
       +'<div class="zone-body"'+bodyStyle+'>'
       +'<table><thead><tr>'
-      +'<th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th>'
+      +'<th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th>'
       +'</tr></thead>'
-      +'<tbody>'+(rows||'<tr><td colspan="9" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
+      +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
       +'</table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml
@@ -810,6 +825,82 @@ function renderZones() {
   });
   initDrag();
 }
+// ── Row drag & drop ──
+function initRowDrag() {
+  document.querySelectorAll('.zone').forEach(function(zoneEl) {
+    var zid = parseInt(zoneEl.id.replace('zone_',''));
+    var tbody = zoneEl.querySelector('tbody');
+    if (!tbody) return;
+
+    tbody.querySelectorAll('.row-drag-handle').forEach(function(handle) {
+      handle.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var row = handle.closest('tr');
+        var iid = parseInt(row.id.replace('row_',''));
+        var rect = row.getBoundingClientRect();
+        var offsetY = e.clientY - rect.top;
+
+        var ghost = row.cloneNode(true);
+        ghost.style.cssText = 'position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,0.15);display:table;';
+        document.body.appendChild(ghost);
+        row.style.opacity = '0.3';
+
+        var placeholder = document.createElement('tr');
+        placeholder.innerHTML = '<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
+        tbody.insertBefore(placeholder, row);
+        row.style.display = 'none';
+
+        function onMove(e) {
+          ghost.style.top = (e.clientY - offsetY) + 'px';
+          var rows = Array.from(tbody.querySelectorAll('tr:not([style*="display: none"]):not(.placeholder)'));
+          var insertBefore = null;
+          for (var i = 0; i < rows.length; i++) {
+            if (rows[i] === placeholder) continue;
+            var r = rows[i].getBoundingClientRect();
+            if (e.clientY < r.top + r.height / 2) { insertBefore = rows[i]; break; }
+          }
+          if (insertBefore) tbody.insertBefore(placeholder, insertBefore);
+          else tbody.appendChild(placeholder);
+        }
+
+        function onUp() {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          ghost.remove();
+          row.style.opacity = '';
+          row.style.display = '';
+          tbody.insertBefore(row, placeholder);
+          placeholder.remove();
+
+          // Update items order in zones
+          var z = zones.find(function(z){return z.id===zid;});
+          if (!z) return;
+          var newOrder = Array.from(tbody.querySelectorAll('tr[id^="row_"]')).map(function(r) {
+            return parseInt(r.id.replace('row_',''));
+          });
+          var reordered = [];
+          newOrder.forEach(function(id) {
+            var it = z.items.find(function(i){return i.id===id;});
+            if (it) reordered.push(it);
+          });
+          z.items = reordered;
+
+          // Update row numbers
+          tbody.querySelectorAll('tr[id^="row_"]').forEach(function(r, idx) {
+            var numCell = r.querySelector('.num-col');
+            if (numCell) numCell.textContent = String(idx+1).padStart(2,'0');
+          });
+          scheduleSave();
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    });
+  });
+}
+
 // ── Drag & drop (handle-only, mouse-based) ──
 function initDrag() {
   document.querySelectorAll('.zone').forEach(function(el) {
