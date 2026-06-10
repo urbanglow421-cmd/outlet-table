@@ -232,7 +232,7 @@ tbody tr.type-poe:hover td { background: rgba(14,124,134,0.1); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
 .zone-head {
   display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-  cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; border-bottom: 1px solid var(--border); background: var(--surface);
 }
 .zone-head:hover { background: var(--surface2); }
 .zone-name { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -243,7 +243,7 @@ tbody tr.type-poe:hover td { background: rgba(14,124,134,0.1); }
 .zone-spacer { flex: 1; }
 .zone-chevron { color: var(--text3); transition: transform 0.2s; }
 .zone-chevron.open { transform: rotate(180deg); }
-.drag-handle { display: flex; align-items: center; width: 18px; flex-shrink: 0; color: var(--text3); cursor: grab; }
+.drag-handle { display: flex; align-items: center; width: 18px; flex-shrink: 0; color: var(--text3); cursor: grab; user-select: none; }
 .drag-handle:active { cursor: grabbing; }
 .zone.dragging { opacity: 0.35; box-shadow: none; }
 .zone.drag-over { outline: 2px dashed var(--accent); outline-offset: 2px; }
@@ -257,7 +257,7 @@ thead th {
 }
 tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
 tbody tr:hover td { background: #FAFAF8; }
-td { padding: 8px 12px; color: var(--text); vertical-align: middle; }
+td { padding: 8px 12px; color: var(--text); vertical-align: middle; user-select: text; }
 td input[type=text] {
   font-family: 'Noto Sans TC', sans-serif; font-size: 13px; width: 100%;
   border: none; background: transparent; color: var(--text); outline: none; padding: 2px 0;
