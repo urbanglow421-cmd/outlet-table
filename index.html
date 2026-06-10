@@ -738,7 +738,7 @@ function renderZones() {
   el.innerHTML = '';
   zones.forEach(function(z) {
     const div = document.createElement('div');
-    div.className = 'zone'; div.id = 'zone_'+z.id; div.draggable = true;
+    div.className = 'zone'; div.id = 'zone_'+z.id; div.draggable = false;
 
     const rows = z.items.map(function(it,i) {
       const opts = TYPES.map(function(t) {
@@ -813,11 +813,18 @@ function renderZones() {
 // ── Drag & drop ──
 function initDrag() {
   document.querySelectorAll('.zone').forEach(el => {
+    // Only enable drag when grabbing the handle
+    var handle = el.querySelector('.drag-handle');
+    if (handle) {
+      handle.addEventListener('mousedown', function() { el.draggable = true; });
+      handle.addEventListener('mouseleave', function() { if (!el.classList.contains('dragging')) el.draggable = false; });
+    }
     el.addEventListener('dragstart', e => {
       dragSrcId = parseInt(el.id.replace('zone_',''));
       el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move';
     });
     el.addEventListener('dragend', () => {
+      el.draggable = false;
       el.classList.remove('dragging');
       document.querySelectorAll('.zone').forEach(z => z.classList.remove('drag-over'));
     });
