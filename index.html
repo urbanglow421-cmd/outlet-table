@@ -8,313 +8,148 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #F0EDE6;
-  --border: #D8D3C8; --border2: #C4BFB2;
-  --text: #1C1A16; --text2: #6B6659; --text3: #9B9485;
-  --accent: #2C5F3F; --accent-light: #E8F2EC; --accent-text: #1A3D28;
-  --amber: #8A5C0A; --amber-light: #FEF3DC;
-  --red: #8A1A1A; --red-light: #FDEAEA;
-  --blue: #1A3A6B; --blue-light: #E8EEFB;
-  --sidebar: 220px;
-  --legend: 200px;
-  --radius: 8px; --radius-lg: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  --bg:#F5F3EE;--surface:#fff;--surface2:#F0EDE6;--border:#D8D3C8;--border2:#C4BFB2;
+  --text:#1C1A16;--text2:#6B6659;--text3:#9B9485;
+  --accent:#2C5F3F;--accent-light:#E8F2EC;--accent-text:#1A3D28;
+  --amber:#8A5C0A;--amber-light:#FEF3DC;--red:#8A1A1A;--red-light:#FDEAEA;
+  --blue:#1A3A6B;--blue-light:#E8EEFB;--purple:#6B3FA0;--teal:#0E7C86;
+  --sidebar:220px;--legend:200px;--radius:8px;--radius-lg:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; display: flex; flex-direction: column; }
-
-/* ── Header ── */
-header {
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
-  height: 56px; position: sticky; top: 0; z-index: 200; flex-shrink: 0;
-}
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-icon { width: 26px; height: 26px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-.logo-icon svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; }
-.logo-text { font-size: 14px; font-weight: 700; color: var(--text); }
-.logo-text span { color: var(--accent); }
-.header-right { display: flex; gap: 8px; align-items: center; }
-
-/* ── Layout ── */
-.layout { display: flex; flex: 1; min-height: 0; }
-
-/* ── Sidebar ── */
-aside {
-  width: var(--sidebar); flex-shrink: 0;
-  background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto;
-}
-.sidebar-head {
-  padding: 16px 16px 10px;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-  color: var(--text3); text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-}
-.proj-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-.proj-item {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 14px; cursor: pointer; transition: background 0.12s;
-  font-size: 13px; color: var(--text2); position: relative;
-}
-.proj-item:hover { background: var(--surface2); color: var(--text); }
-.proj-item.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
-.proj-item.active::before {
-  content: ''; position: absolute; left: 0; top: 4px; bottom: 4px;
-  width: 3px; background: var(--accent); border-radius: 0 2px 2px 0;
-}
-.proj-del {
-  margin-left: auto; opacity: 0; width: 20px; height: 20px;
-  border: none; background: transparent; cursor: pointer; border-radius: 4px;
-  display: flex; align-items: center; justify-content: center; color: var(--text3);
-  flex-shrink: 0;
-}
-.proj-item:hover .proj-del { opacity: 1; }
-.proj-del:hover { background: var(--red-light); color: var(--red); }
-.proj-del svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-/* Project rename inline input */
-.proj-rename-input {
-  flex: 1; font-family: 'Noto Sans TC', sans-serif; font-size: 13px;
-  border: none; background: transparent; color: var(--accent-text);
-  outline: 1px solid var(--accent); border-radius: 3px;
-  padding: 0 4px; min-width: 0;
-}
-
-/* Project drag */
-.proj-drag { display: flex; align-items: center; width: 14px; flex-shrink: 0; color: var(--text3); cursor: grab; }
-.proj-drag:active { cursor: grabbing; }
-.proj-item.proj-dragging { opacity: 0.35; }
-.proj-item.proj-drag-over { outline: 2px dashed var(--accent); outline-offset: -2px; border-radius: 4px; }
-
-/* ── Legend sidebar ── */
-.legend-aside {
-  width: var(--legend); flex-shrink: 0;
-  background: var(--surface); border-left: 1px solid var(--border);
-  position: sticky; top: 56px; height: calc(100vh - 56px);
-  overflow-y: auto; display: flex; flex-direction: column;
-}
-.legend-head {
-  padding: 16px 14px 10px;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-  color: var(--text3); text-transform: uppercase;
-  border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-.legend-body { padding: 12px 0; flex: 1; overflow-y: auto; }
-.legend-section {
-  padding: 6px 14px 10px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 2px;
-}
-.legend-section:last-child { border-bottom: none; }
-.legend-section-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
-}
-.legend-item { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
-.legend-item:last-child { margin-bottom: 0; }
-.legend-tag {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 600; margin-bottom: 2px;
-}
-.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.legend-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
-.dot-resident { background: #1A3A6B; }
-.dot-flex     { background: #1A3A6B; }
-.dot-seasonal { background: #1A3A6B; }
-.dot-high     { background: #8A1A1A; }
-.dot-lighting { background: #6B3FA0; }
-.dot-poe      { background: #0E7C86; }
-
-.sidebar-add { padding: 12px; border-top: 1px solid var(--border); }
-.sidebar-add input {
-  width: 100%; font-family: 'Noto Sans TC', sans-serif; font-size: 12px;
-  height: 30px; padding: 0 8px; border: 1px solid var(--border);
-  border-radius: var(--radius); background: var(--surface2); color: var(--text);
-  outline: none; margin-bottom: 6px;
-}
-.sidebar-add input:focus { border-color: var(--accent); }
-
-/* ── Main ── */
-main { flex: 1; min-width: 0; padding: 28px 28px 80px; overflow-y: auto; }
-
-/* ── Empty state ── */
-#empty-state {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  height: 60vh; gap: 12px; color: var(--text3);
-}
-#empty-state .big { font-size: 40px; }
-#empty-state p { font-size: 14px; }
-
-/* ── Buttons ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 500;
-  padding: 0 14px; height: 34px; border-radius: var(--radius);
-  border: 1px solid var(--border); background: var(--surface); color: var(--text2);
-  cursor: pointer; transition: all 0.15s; white-space: nowrap;
-}
-.btn:hover { border-color: var(--border2); background: var(--surface2); color: var(--text); }
-.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); color: #fff; }
-.btn-sm { height: 28px; font-size: 12px; padding: 0 10px; }
-.btn-block { width: 100%; justify-content: center; }
-
-/* ── Sync ── */
-.sync-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 12px; padding: 3px 10px; border-radius: 20px;
-}
-.sync-ok   { background: var(--accent-light); color: var(--accent-text); }
-.sync-busy { background: var(--amber-light); color: var(--amber); }
-.sync-err  { background: var(--red-light); color: var(--red); }
-.sync-dot  { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.sync-busy .sync-dot { animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-/* ── Project header ── */
-.proj-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.proj-title { font-size: 20px; font-weight: 700; color: var(--text); }
-
-/* ── Summary ── */
-.summary { display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; margin-bottom: 24px; }
-.scard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; }
-.scard .lbl { font-size: 11px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.05em; }
-.scard .val { font-size: 24px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--text); line-height: 1; }
-.scard .sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
-.scard.c-resident { border-top: 3px solid #1A3A6B; }
-.scard.c-flex     { border-top: 3px solid var(--accent); }
-.scard.c-seasonal { border-top: 3px solid #8A5C0A; }
-.scard.c-high     { border-top: 3px solid #8A1A1A; }
-.scard.c-lighting { border-top: 3px solid #6B3FA0; }
-
-/* ── Add zone bar ── */
-.add-bar {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 12px 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px;
-}
-.add-bar select, .add-bar input[type=text] {
-  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; height: 32px; padding: 0 10px;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  background: var(--surface2); color: var(--text); outline: none;
-}
-.add-bar select:focus, .add-bar input:focus { border-color: var(--accent); }
-.add-bar select { min-width: 120px; }
-.add-bar input[type=text] { width: 140px; }
-.sep { flex: 1; }
-
-/* ── Row colors by type ── */
-tbody tr.type-resident td { background: rgba(26,58,107,0.05); }
-tbody tr.type-flex     td { background: rgba(26,58,107,0.05); }
-tbody tr.type-seasonal td { background: rgba(26,58,107,0.05); }
-tbody tr.type-high     td { background: rgba(138,26,26,0.05); }
-tbody tr.type-direct   td { background: rgba(107,63,160,0.05); }
-tbody tr.type-indirect td { background: rgba(107,63,160,0.05); }
-tbody tr.type-accent   td { background: rgba(107,63,160,0.05); }
-tbody tr.type-resident:hover td { background: rgba(26,58,107,0.1); }
-tbody tr.type-flex:hover     td { background: rgba(26,58,107,0.1); }
-tbody tr.type-seasonal:hover td { background: rgba(26,58,107,0.1); }
-tbody tr.type-high:hover     td { background: rgba(138,26,26,0.1); }
-tbody tr.type-direct:hover   td { background: rgba(107,63,160,0.1); }
-tbody tr.type-indirect:hover td { background: rgba(107,63,160,0.1); }
-tbody tr.type-accent:hover   td { background: rgba(107,63,160,0.1); }
-tbody tr.type-poe      td { background: rgba(14,124,134,0.05); }
-tbody tr.type-poe:hover td { background: rgba(14,124,134,0.1); }
-
-/* ── Zones ── */
-.zone {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow);
-  animation: fadeIn 0.18s ease;
-}
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
-.zone-head {
-  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-  cursor: pointer; border-bottom: 1px solid var(--border); background: var(--surface);
-}
-.zone-head:hover { background: var(--surface2); }
-.zone-name { font-size: 14px; font-weight: 700; color: var(--text); }
-.zone-count {
-  font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text3);
-  background: var(--surface2); padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
-}
-.zone-spacer { flex: 1; }
-.zone-chevron { color: var(--text3); transition: transform 0.2s; }
-.zone-chevron.open { transform: rotate(180deg); }
-.drag-handle { display: flex; align-items: center; width: 18px; flex-shrink: 0; color: var(--text3); cursor: grab; user-select: none; }
-.drag-handle:active { cursor: grabbing; }
-.zone.dragging { opacity: 0.35; box-shadow: none; }
-.zone.drag-over { outline: 2px dashed var(--accent); outline-offset: 2px; }
-
-/* ── Table ── */
-table { width: 100%; border-collapse: collapse; }
-thead th {
-  font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: var(--text3);
-  text-transform: uppercase; padding: 9px 12px; background: var(--surface2);
-  border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap;
-}
-tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
-tbody tr:hover td { background: #FAFAF8; }
-td { padding: 8px 12px; color: var(--text); vertical-align: middle; user-select: text; }
-td input[type=text] {
-  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; width: 100%;
-  border: none; background: transparent; color: var(--text); outline: none; padding: 2px 0;
-}
-td input[type=text]:focus { background: var(--surface2); border-radius: 4px; padding: 2px 6px; margin: -2px -6px; width: calc(100% + 12px); }
-td select {
-  font-family: 'Noto Sans TC', sans-serif; font-size: 12px; border: 1px solid var(--border);
-  border-radius: var(--radius); background: var(--surface2); color: var(--text);
-  padding: 3px 8px; height: 26px; cursor: pointer; outline: none;
-}
-td select:focus { border-color: var(--accent); }
-.num-col { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); width: 32px; }
-.del-btn {
-  width: 26px; height: 26px; border: none; background: transparent; border-radius: var(--radius);
-  display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text3); transition: all 0.15s;
-}
-.del-btn:hover { background: var(--red-light); color: var(--red); }
-.del-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
-.del-zone {
-  display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  background: transparent; cursor: pointer; color: var(--text3); transition: all 0.15s;
-}
-.del-zone:hover { background: var(--red-light); color: var(--red); border-color: var(--red-light); }
-.del-zone.locked { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-.del-zone svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
-.lock-btn {
-  display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  background: transparent; cursor: pointer; color: var(--text3); transition: all 0.15s;
-}
-.lock-btn:hover { background: var(--surface2); color: var(--text); }
-.lock-btn.active { background: var(--amber-light); color: var(--amber); border-color: var(--amber-light); }
-.lock-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
-.add-item-row { padding: 9px 12px; border-top: 1px solid var(--border); background: var(--surface2); }
-.tbl-empty { text-align: center; padding: 28px; color: var(--text3); font-size: 13px; }
-
-/* ── Zone power footer ── */
-.zone-footer {
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  padding: 8px 14px; border-top: 1px solid var(--border);
-  background: var(--surface2); font-size: 12px; color: var(--text2);
-}
-.zone-footer .pwr-label { color: var(--text3); }
-.zone-footer .pwr-val { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text); }
-.zone-footer .pwr-110 { color: #1A3A6B; }
-.zone-footer .pwr-220 { color: #8A1A1A; }
-.voltage-select {
-  font-family: 'Noto Sans TC', sans-serif; font-size: 11px;
-  border: 1px solid var(--border); border-radius: 4px;
-  background: var(--surface); color: var(--text);
-  padding: 1px 4px; height: 20px; cursor: pointer; outline: none;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;display:flex;flex-direction:column}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:26px;height:26px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2}
+.logo-text{font-size:14px;font-weight:700;color:var(--text)}
+.logo-text span{color:var(--accent)}
+.header-right{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:34px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{border-color:var(--border2);background:var(--surface2);color:var(--text)}
+.btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text);color:#fff}
+.btn-sm{height:28px;font-size:12px;padding:0 10px}
+.btn-block{width:100%;justify-content:center}
+.layout{display:flex;flex:1;min-height:0}
+aside{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.sidebar-head{padding:16px 16px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border);flex-shrink:0}
+.proj-list{flex:1;overflow-y:auto;padding:8px 0}
+.proj-item{display:flex;align-items:center;gap:6px;padding:8px 14px;cursor:pointer;transition:background .12s;font-size:13px;color:var(--text2);position:relative;user-select:none}
+.proj-item:hover{background:var(--surface2);color:var(--text)}
+.proj-item.active{background:var(--accent-light);color:var(--accent-text);font-weight:500}
+.proj-item.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
+.proj-del{margin-left:auto;opacity:0;width:20px;height:20px;border:none;background:transparent;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
+.proj-item:hover .proj-del{opacity:1}
+.proj-del:hover{background:var(--red-light);color:var(--red)}
+.proj-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.proj-rename-input{flex:1;font-family:'Noto Sans TC',sans-serif;font-size:13px;border:none;background:transparent;color:var(--accent-text);outline:1px solid var(--accent);border-radius:3px;padding:0 4px;min-width:0}
+.proj-drag{display:flex;align-items:center;width:14px;flex-shrink:0;color:var(--text3);cursor:grab}
+.proj-drag:active{cursor:grabbing}
+.proj-item.proj-dragging{opacity:.35}
+.proj-item.proj-drag-over{outline:2px dashed var(--accent);outline-offset:-2px;border-radius:4px}
+.sidebar-add{padding:12px;border-top:1px solid var(--border)}
+.sidebar-add input{width:100%;font-family:'Noto Sans TC',sans-serif;font-size:12px;height:30px;padding:0 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none;margin-bottom:6px}
+.sidebar-add input:focus{border-color:var(--accent)}
+main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
+#empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:12px;color:var(--text3)}
+#empty-state .big{font-size:40px}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:20px}
+.sync-ok{background:var(--accent-light);color:var(--accent-text)}
+.sync-busy{background:var(--amber-light);color:var(--amber)}
+.sync-err{background:var(--red-light);color:var(--red)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.sync-busy .sync-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.proj-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.proj-title{font-size:20px;font-weight:700;color:var(--text)}
+.summary{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
+.scard .lbl{font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.05em}
+.scard .val{font-size:24px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);line-height:1}
+.scard .sub{font-size:11px;color:var(--text3);margin-top:3px}
+.scard.c-resident{border-top:3px solid #1A3A6B}
+.scard.c-flex{border-top:3px solid var(--accent)}
+.scard.c-seasonal{border-top:3px solid #8A5C0A}
+.scard.c-high{border-top:3px solid #8A1A1A}
+.scard.c-lighting{border-top:3px solid #6B3FA0}
+.add-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.add-bar select,.add-bar input[type=text]{font-family:'Noto Sans TC',sans-serif;font-size:13px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none}
+.add-bar select:focus,.add-bar input:focus{border-color:var(--accent)}
+.add-bar select{min-width:120px}
+.add-bar input[type=text]{width:140px}
+.sep{flex:1}
+.zone{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.zone-head{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--border);background:var(--surface)}
+.zone-head:hover{background:var(--surface2)}
+.zone-name{font-size:14px;font-weight:700;color:var(--text)}
+.zone-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--surface2);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
+.zone-spacer{flex:1}
+.zone-chevron{color:var(--text3);transition:transform .2s}
+.zone-chevron.open{transform:rotate(180deg)}
+.drag-handle{display:flex;align-items:center;width:18px;flex-shrink:0;color:var(--text3);cursor:grab;user-select:none}
+.drag-handle:active{cursor:grabbing}
+.row-drag-handle{cursor:grab;color:var(--text3);user-select:none}
+.row-drag-handle:hover{color:var(--text)}
+/* Row colors */
+tbody tr.type-resident td{background:rgba(26,58,107,.05)}
+tbody tr.type-flex td{background:rgba(26,58,107,.05)}
+tbody tr.type-seasonal td{background:rgba(26,58,107,.05)}
+tbody tr.type-high td{background:rgba(138,26,26,.05)}
+tbody tr.type-direct td,tbody tr.type-indirect td,tbody tr.type-accent td{background:rgba(107,63,160,.05)}
+tbody tr.type-poe td{background:rgba(14,124,134,.05)}
+tbody tr.type-resident:hover td,tbody tr.type-flex:hover td,tbody tr.type-seasonal:hover td{background:rgba(26,58,107,.1)}
+tbody tr.type-high:hover td{background:rgba(138,26,26,.1)}
+tbody tr.type-direct:hover td,tbody tr.type-indirect:hover td,tbody tr.type-accent:hover td{background:rgba(107,63,160,.1)}
+tbody tr.type-poe:hover td{background:rgba(14,124,134,.1)}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--text3);text-transform:uppercase;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+tbody tr:not(:last-child) td{border-bottom:1px solid var(--border)}
+td{padding:8px 12px;color:var(--text);vertical-align:middle;user-select:text}
+td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:13px;width:100%;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0}
+td input:focus{background:var(--surface2);border-radius:4px;padding:2px 6px;margin:-2px -6px;width:calc(100% + 12px)}
+td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);padding:3px 8px;height:26px;cursor:pointer;outline:none}
+td select:focus{border-color:var(--accent)}
+.num-col{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);width:32px}
+.del-btn{width:26px;height:26px;border:none;background:transparent;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all .15s}
+.del-btn:hover{background:var(--red-light);color:var(--red)}
+.del-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.del-zone{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
+.del-zone:hover{background:var(--red-light);color:var(--red);border-color:var(--red-light)}
+.del-zone.locked{opacity:.3;cursor:not-allowed;pointer-events:none}
+.del-zone svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.lock-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
+.lock-btn:hover{background:var(--surface2);color:var(--text)}
+.lock-btn.active{background:var(--amber-light);color:var(--amber);border-color:var(--amber-light)}
+.lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.add-item-row{padding:9px 12px;border-top:1px solid var(--border);background:var(--surface2)}
+.tbl-empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
+.zone-footer{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border);background:var(--surface2);font-size:12px;color:var(--text2)}
+.zone-footer .pwr-label{color:var(--text3)}
+.zone-footer .pwr-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text)}
+.zone-footer .pwr-110{color:#1A3A6B}
+.zone-footer .pwr-220{color:#8A1A1A}
+.voltage-select{font-family:'Noto Sans TC',sans-serif;font-size:11px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);padding:1px 4px;height:20px;cursor:pointer;outline:none}
+.legend-aside{width:var(--legend);flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;display:flex;flex-direction:column}
+.legend-head{padding:16px 14px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border);flex-shrink:0}
+.legend-body{padding:12px 0;flex:1;overflow-y:auto}
+.legend-section{padding:6px 14px 10px;border-bottom:1px solid var(--border);margin-bottom:2px}
+.legend-section:last-child{border-bottom:none}
+.legend-section-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.legend-item{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+.legend-item:last-child{margin-bottom:0}
+.legend-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;margin-bottom:2px}
+.legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.legend-desc{font-size:11px;color:var(--text3);line-height:1.5}
+.dot-resident,.dot-flex,.dot-seasonal{background:#1A3A6B}
+.dot-high{background:#8A1A1A}
+.dot-lighting{background:#6B3FA0}
+.dot-poe{background:#0E7C86}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <div class="logo-icon">
@@ -325,649 +160,458 @@ td select:focus { border-color: var(--accent); }
   <div class="header-right">
     <span id="sync-status" class="sync-badge sync-busy"><span class="sync-dot"></span>連線中…</span>
     <button class="btn" onclick="loadProject(currentProject)">
-      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-      重新整理
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>重新整理
     </button>
     <button class="btn" onclick="exportCSV()">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      匯出 CSV
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>匯出 CSV
     </button>
     <button class="btn" onclick="window.print()">
-      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      列印
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>列印
     </button>
   </div>
 </header>
-
 <div class="layout">
-  <!-- Sidebar -->
   <aside>
     <div class="sidebar-head">專案列表</div>
     <div class="proj-list" id="proj-list"></div>
     <div class="sidebar-add">
       <input type="text" id="new-proj-input" placeholder="新專案名稱…" maxlength="40">
       <button class="btn btn-primary btn-block btn-sm" onclick="addProject()">
-        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        新增專案
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增專案
       </button>
     </div>
   </aside>
-
-  <!-- Main content -->
   <main id="main-content">
-    <div id="empty-state">
-      <div class="big">📋</div>
-      <p>從左側選擇或新增專案</p>
-    </div>
+    <div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>
   </main>
-
-  <!-- Legend sidebar -->
   <aside class="legend-aside">
     <div class="legend-head">類型說明</div>
     <div class="legend-body">
       <div class="legend-section">
         <div class="legend-section-title">插座</div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-resident"></span>長期使用</div>
-          <div class="legend-desc">常駐電源，長期插著不拔。如電視、冰箱、路由器。</div>
-        </div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-flex"></span>短暫使用</div>
-          <div class="legend-desc">彈性電源，偶爾使用後拔除。如吹風機、吸塵器、筆電。</div>
-        </div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-seasonal"></span>窗邊／牆角</div>
-          <div class="legend-desc">季節性家電，依季節使用。如電風扇、電暖器、除濕機。</div>
-        </div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div>
-          <div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div>
-        </div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-resident"></span>長期使用</div><div class="legend-desc">常駐電源，長期插著不拔。如電視、冰箱、路由器。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-flex"></span>短暫使用</div><div class="legend-desc">彈性電源，偶爾使用後拔除。如吹風機、吸塵器、筆電。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-seasonal"></span>窗邊／牆角</div><div class="legend-desc">季節性家電，依季節使用。如電風扇、電暖器、除濕機。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div></div>
       </div>
       <div class="legend-section">
         <div class="legend-section-title">燈具</div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>直接照明</div>
-          <div class="legend-desc">光源直接照射空間的主要照明。如吸頂燈、筒燈、軌道燈。</div>
-        </div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>間接照明</div>
-          <div class="legend-desc">光源透過反射營造氛圍。如燈帶、崁燈、壁燈。</div>
-        </div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-lighting"></span>重點照明</div>
-          <div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈、畫燈。</div>
-        </div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>直接照明</div><div class="legend-desc">光源直接照射空間的主要照明。如吸頂燈、筒燈、軌道燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>間接照明</div><div class="legend-desc">光源透過反射營造氛圍。如燈帶、崁燈、壁燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>重點照明</div><div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈、畫燈。</div></div>
       </div>
       <div class="legend-section">
         <div class="legend-section-title">網路供電</div>
-        <div class="legend-item">
-          <div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE 供電</div>
-          <div class="legend-desc">透過網路線供電，不需要插座。如 IP 攝影機、無線基地台、門禁讀卡機。</div>
-        </div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE 供電</div><div class="legend-desc">透過網路線供電，不需要插座。如 IP 攝影機、無線基地台、門禁讀卡機。</div></div>
       </div>
     </div>
   </aside>
 </div>
-
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
-
 const TYPES = [
-  { key: 'resident', label: '長期使用',   desc: '常駐電源'   },
-  { key: 'flex',     label: '短暫使用',   desc: '彈性電源'   },
-  { key: 'seasonal', label: '窗邊／牆角', desc: '季節性家電' },
-  { key: 'high',     label: '高功率家電', desc: '獨立迴路'   },
-  { key: 'direct',   label: '直接照明',   desc: '燈具'       },
-  { key: 'indirect', label: '間接照明',   desc: '燈具'       },
-  { key: 'accent',   label: '重點照明',   desc: '燈具'       },
-  { key: 'poe',      label: 'PoE 供電',   desc: '網路線供電' },
+  {key:'resident',label:'長期使用',desc:'常駐電源'},
+  {key:'flex',label:'短暫使用',desc:'彈性電源'},
+  {key:'seasonal',label:'窗邊／牆角',desc:'季節性家電'},
+  {key:'high',label:'高功率家電',desc:'獨立迴路'},
+  {key:'direct',label:'直接照明',desc:'燈具'},
+  {key:'indirect',label:'間接照明',desc:'燈具'},
+  {key:'accent',label:'重點照明',desc:'燈具'},
+  {key:'poe',label:'PoE 供電',desc:'網路線供電'},
 ];
+let projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 
-let projects = [];       // list of project names
-let currentProject = ''; // active project name
-let zones = [];
-let nextId = 1;
-let saveTimer = null;
-let dragSrcId = null;
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function setSyncStatus(state,text){var el=document.getElementById('sync-status');el.className='sync-badge sync-'+state;el.innerHTML='<span class="sync-dot"></span>'+text;}
 
-// ── Icons ──
-const ICONS = {
-  plus:    '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
-  trash:   '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>',
-  chevron: '<polyline points="6 9 12 15 18 9"/>',
-};
-function icon(name, size=14) {
-  return `<svg viewBox="0 0 24 24" style="width:${size}px;height:${size}px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">${ICONS[name]}</svg>`;
-}
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ── Sync status ──
-function setSyncStatus(state, text) {
-  const el = document.getElementById('sync-status');
-  el.className = 'sync-badge sync-' + state;
-  el.innerHTML = `<span class="sync-dot"></span>${text}`;
-}
-
-// ── API calls (all via JSONP GET to avoid CORS) ──
-function jsonp(params) {
-  return new Promise(function(resolve, reject) {
-    const cb = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const merged = Object.assign({}, params, {callback: cb});
-    // Build URL manually to avoid encoding issues with large JSON
-    const parts = Object.keys(merged).map(function(k) {
-      return encodeURIComponent(k) + '=' + encodeURIComponent(merged[k]);
-    });
-    const url = API_URL + '?' + parts.join('&');
-    const script = document.createElement('script');
-    const timer = setTimeout(function() {
-      cleanup(); reject(new Error('timeout'));
-    }, 15000);
-    function cleanup() { clearTimeout(timer); delete window[cb]; if (script.parentNode) script.parentNode.removeChild(script); }
-    window[cb] = function(data) { cleanup(); resolve(data); };
-    script.onerror = function() { cleanup(); reject(new Error('script error')); };
-    script.src = url;
+function jsonp(params){
+  return new Promise(function(resolve,reject){
+    var cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    var merged=Object.assign({},params,{callback:cb});
+    var parts=Object.keys(merged).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(merged[k]);});
+    var url=API_URL+'?'+parts.join('&');
+    var script=document.createElement('script');
+    var timer=setTimeout(function(){cleanup();reject(new Error('timeout'));},15000);
+    function cleanup(){clearTimeout(timer);delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);}
+    window[cb]=function(data){cleanup();resolve(data);};
+    script.onerror=function(){cleanup();reject(new Error('error'));};
+    script.src=url;
     document.head.appendChild(script);
   });
 }
-
-async function api(params, body=null) {
-  if (body) {
-    const p = {
-      action:   body.action  || '',
-      project:  body.project || '',
-      callback: ''  // will be set by jsonp()
-    };
-    if (body.zones !== undefined) {
-      p.zones = typeof body.zones === 'string'
-        ? body.zones
-        : JSON.stringify(body.zones);
-    }
+async function api(params,body){
+  if(body){
+    var p={action:body.action||'',project:body.project||''};
+    if(body.zones!==undefined) p.zones=typeof body.zones==='string'?body.zones:JSON.stringify(body.zones);
     return await jsonp(p);
-  } else {
-    return await jsonp(params);
   }
+  return await jsonp(params);
 }
-
-// ── Load project list ──
-async function loadProjects() {
-  setSyncStatus('busy', '載入中…');
-  try {
-    const data = await api({ action: 'list' });
-    projects = data.projects || [];
+async function loadProjects(){
+  setSyncStatus('busy','載入中…');
+  try{
+    var data=await api({action:'list'});
+    projects=data.projects||[];
     renderSidebar();
-    if (projects.length > 0) {
-      switchProject(projects[0]);
-    } else {
-      setSyncStatus('ok', '已連線');
-    }
-  } catch(e) {
-    setSyncStatus('err', '連線失敗');
-  }
+    if(projects.length>0) switchProject(projects[0]);
+    else setSyncStatus('ok','已連線');
+  }catch(e){setSyncStatus('err','連線失敗');}
 }
-
-// ── Load zones for a project ──
-async function loadProject(name) {
-  if (!name) return;
-  setSyncStatus('busy', '讀取中…');
-  try {
-    const data = await api({ action: 'get', project: name });
-    zones = data.zones || [];
-    nextId = zones.length
-      ? Math.max(...zones.flatMap(z => [z.id, ...z.items.map(i=>i.id)])) + 1
-      : 1;
+async function loadProject(name){
+  if(!name)return;
+  setSyncStatus('busy','讀取中…');
+  try{
+    var data=await api({action:'get',project:name});
+    zones=data.zones||[];
+    nextId=zones.length?Math.max.apply(null,zones.flatMap(function(z){return[z.id].concat(z.items.map(function(i){return i.id;}))}))+1:1;
     renderMain();
-    setSyncStatus('ok', '已同步');
-  } catch(e) {
-    setSyncStatus('err', '讀取失敗');
-  }
+    setSyncStatus('ok','已同步');
+  }catch(e){setSyncStatus('err','讀取失敗');}
 }
-
-// ── Save ──
-async function saveProject() {
-  if (!currentProject) return;
-  setSyncStatus('busy', '儲存中…');
-  try {
-    await api(null, { action:'set', project: currentProject, zones });
-    setSyncStatus('ok', '已儲存');
-  } catch(e) {
-    setSyncStatus('err', '儲存失敗');
-  }
+async function saveProject(){
+  if(!currentProject)return;
+  setSyncStatus('busy','儲存中…');
+  try{await api(null,{action:'set',project:currentProject,zones:zones});setSyncStatus('ok','已儲存');}
+  catch(e){setSyncStatus('err','儲存失敗');}
 }
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveProject, 1200);
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1200);}
+function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
+async function addProject(){
+  var inp=document.getElementById('new-proj-input');
+  var name=inp.value.trim();
+  if(!name){inp.focus();return;}
+  if(projects.indexOf(name)>=0){alert('已有同名專案');return;}
+  projects.push(name);inp.value='';zones=[];currentProject=name;
+  renderSidebar();renderMain();await saveProject();
 }
-
-// ── Switch project ──
-function switchProject(name) {
-  currentProject = name;
-  renderSidebar();
-  loadProject(name);
+async function deleteProject(name){
+  if(!confirm('確定要刪除專案「'+name+'」及所有資料？'))return;
+  setSyncStatus('busy','刪除中…');
+  try{
+    await api(null,{action:'delete',project:name});
+    projects=projects.filter(function(p){return p!==name;});
+    if(currentProject===name){currentProject='';zones=[];document.getElementById('main-content').innerHTML='<div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>';}
+    renderSidebar();setSyncStatus('ok','已刪除');
+  }catch(e){setSyncStatus('err','刪除失敗');}
 }
-
-// ── Add project ──
-async function addProject() {
-  const inp = document.getElementById('new-proj-input');
-  const name = inp.value.trim();
-  if (!name) { inp.focus(); return; }
-  if (projects.includes(name)) { alert('已有同名專案'); return; }
-  projects.push(name);
-  inp.value = '';
-  zones = [];
-  currentProject = name;
-  renderSidebar();
-  renderMain();
-  await saveProject();
-}
-
-// ── Delete project ──
-async function deleteProject(name) {
-  if (!confirm(`確定要刪除專案「${name}」及所有資料？`)) return;
-  setSyncStatus('busy', '刪除中…');
-  try {
-    await api(null, { action:'delete', project: name });
-    projects = projects.filter(p => p !== name);
-    if (currentProject === name) {
-      currentProject = '';
-      zones = [];
-      document.getElementById('main-content').innerHTML = `
-        <div id="empty-state">
-          <div class="big">📋</div>
-          <p>從左側選擇或新增專案</p>
-        </div>`;
-    }
-    renderSidebar();
-    setSyncStatus('ok', '已刪除');
-  } catch(e) {
-    setSyncStatus('err', '刪除失敗');
-  }
-}
-
-// ── Sidebar ──
-function renderSidebar() {
-  const el = document.getElementById('proj-list');
-  if (projects.length === 0) {
-    el.innerHTML = `<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>`;
-    return;
-  }
-  el.innerHTML = projects.map(p => `
-    <div class="proj-item ${p===currentProject?'active':''}" id="proj_${CSS.escape(p)}"
-         draggable="true" onclick="switchProject('${esc(p)}')" title="雙擊修改名稱" ondblclick="startRename(event,'${esc(p)}')">
-      <span class="proj-drag" onclick="event.stopPropagation()" title="拖曳排序">
-        <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none">
-          <circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/>
-          <circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/>
-          <circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/>
-        </svg>
-      </span>
-      <span class="proj-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p)}</span>
-      <button class="proj-del" onclick="event.stopPropagation();deleteProject('${esc(p)}')" title="刪除專案">
-        <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-      </button>
-    </div>
-  `).join('');
+function renderSidebar(){
+  var el=document.getElementById('proj-list');
+  if(projects.length===0){el.innerHTML='<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>';return;}
+  el.innerHTML=projects.map(function(p){
+    return '<div class="proj-item'+(p===currentProject?' active':'')+'" id="proj_'+encodeURIComponent(p)+'" draggable="true" onclick="switchProject(\''+esc(p)+'\')" ondblclick="startRename(event,\''+esc(p)+'\')">'
+      +'<span class="proj-drag" onclick="event.stopPropagation()" title="拖曳排序"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></span>'
+      +'<span class="proj-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p)+'</span>'
+      +'<button class="proj-del" onclick="event.stopPropagation();deleteProject(\''+esc(p)+'\')" title="刪除"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>'
+      +'</div>';
+  }).join('');
   initProjDrag();
 }
-
-// ── Rename project ──
-function startRename(e, name) {
+function startRename(e,name){
   e.stopPropagation();
-  const item = document.getElementById('proj_' + CSS.escape(name));
-  if (!item) return;
-  const label = item.querySelector('.proj-label');
-  const inp = document.createElement('input');
-  inp.className = 'proj-rename-input';
-  inp.value = name;
-  inp.onclick = e => e.stopPropagation();
-  label.replaceWith(inp);
-  inp.focus(); inp.select();
-  async function commitRename() {
-    const newName = inp.value.trim();
-    if (!newName || newName === name) { renderSidebar(); return; }
-    if (projects.includes(newName)) { alert('已有同名專案'); renderSidebar(); return; }
-    setSyncStatus('busy', '更名中…');
-    try {
-      // Copy data under new name, delete old
-      const data = await api({ action:'get', project: name });
-      await api(null, { action:'set', project: newName, zones: data.zones||[] });
-      await api(null, { action:'delete', project: name });
-      const idx = projects.indexOf(name);
-      projects[idx] = newName;
-      if (currentProject === name) {
-        currentProject = newName;
-        const titleEl = document.querySelector('.proj-title');
-        if (titleEl) titleEl.textContent = newName;
-      }
-      renderSidebar();
-      setSyncStatus('ok', '已更名');
-    } catch(err) {
-      setSyncStatus('err', '更名失敗'); renderSidebar();
-    }
+  var item=document.getElementById('proj_'+encodeURIComponent(name));
+  if(!item)return;
+  var label=item.querySelector('.proj-label');
+  var inp=document.createElement('input');
+  inp.className='proj-rename-input';inp.value=name;
+  inp.onclick=function(e){e.stopPropagation();};
+  label.replaceWith(inp);inp.focus();inp.select();
+  async function commit(){
+    var newName=inp.value.trim();
+    if(!newName||newName===name){renderSidebar();return;}
+    if(projects.indexOf(newName)>=0){alert('已有同名專案');renderSidebar();return;}
+    setSyncStatus('busy','更名中…');
+    try{
+      var data=await api({action:'get',project:name});
+      await api(null,{action:'set',project:newName,zones:data.zones||[]});
+      await api(null,{action:'delete',project:name});
+      projects[projects.indexOf(name)]=newName;
+      if(currentProject===name){currentProject=newName;var t=document.querySelector('.proj-title');if(t)t.textContent=newName;}
+      renderSidebar();setSyncStatus('ok','已更名');
+    }catch(err){setSyncStatus('err','更名失敗');renderSidebar();}
   }
-  inp.addEventListener('blur', commitRename);
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { inp.blur(); }
-    if (e.key === 'Escape') { inp.removeEventListener('blur', commitRename); renderSidebar(); }
-  });
+  inp.addEventListener('blur',commit);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.removeEventListener('blur',commit);renderSidebar();}});
 }
-
-// ── Proj drag & drop ──
-let projDragSrc = null;
-function initProjDrag() {
-  document.querySelectorAll('.proj-item').forEach(el => {
-    el.addEventListener('dragstart', e => {
-      projDragSrc = el.id.replace('proj_','');
-      el.classList.add('proj-dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    el.addEventListener('dragend', () => {
-      el.classList.remove('proj-dragging');
-      document.querySelectorAll('.proj-item').forEach(x => x.classList.remove('proj-drag-over'));
-    });
-    el.addEventListener('dragover', e => {
-      e.preventDefault();
-      document.querySelectorAll('.proj-item').forEach(x => x.classList.remove('proj-drag-over'));
-      const tid = el.id.replace('proj_','');
-      if (tid !== projDragSrc) el.classList.add('proj-drag-over');
-    });
-    el.addEventListener('dragleave', () => el.classList.remove('proj-drag-over'));
-    el.addEventListener('drop', e => {
-      e.preventDefault();
-      const tid = el.id.replace('proj_','');
-      if (tid === projDragSrc) return;
-      const si = projects.indexOf(decodeURIComponent(projDragSrc));
-      const ti = projects.indexOf(decodeURIComponent(tid));
-      if (si<0||ti<0) return;
-      const [m] = projects.splice(si,1);
-      projects.splice(ti,0,m);
-      renderSidebar();
+var projDragSrc=null;
+function initProjDrag(){
+  document.querySelectorAll('.proj-item').forEach(function(el){
+    el.addEventListener('dragstart',function(e){projDragSrc=el.id.replace('proj_','');el.classList.add('proj-dragging');e.dataTransfer.effectAllowed='move';});
+    el.addEventListener('dragend',function(){el.classList.remove('proj-dragging');document.querySelectorAll('.proj-item').forEach(function(x){x.classList.remove('proj-drag-over');});});
+    el.addEventListener('dragover',function(e){e.preventDefault();document.querySelectorAll('.proj-item').forEach(function(x){x.classList.remove('proj-drag-over');});var tid=el.id.replace('proj_','');if(tid!==projDragSrc)el.classList.add('proj-drag-over');});
+    el.addEventListener('dragleave',function(){el.classList.remove('proj-drag-over');});
+    el.addEventListener('drop',function(e){
+      e.preventDefault();var tid=el.id.replace('proj_','');if(tid===projDragSrc)return;
+      var si=projects.indexOf(decodeURIComponent(projDragSrc)),ti=projects.indexOf(decodeURIComponent(tid));
+      if(si<0||ti<0)return;var m=projects.splice(si,1)[0];projects.splice(ti,0,m);renderSidebar();
     });
   });
 }
-
-// ── Main content ──
-function renderMain() {
-  const el = document.getElementById('main-content');
-  el.innerHTML = `
-    <div class="proj-header">
-      <div class="proj-title">${esc(currentProject)}</div>
-    </div>
-    <div class="summary" id="summary"></div>
-    <div class="add-bar">
-      <select id="newZone">
-        <option value="">選擇空間…</option>
-        <option>客廳</option><option>主臥</option><option>次臥</option>
-        <option>書房</option><option>廚房</option><option>餐廳</option>
-        <option>浴室</option><option>陽台</option><option>玄關</option>
-        <option>車庫</option><option>儲藏室</option><option>其他</option>
-      </select>
-      <input type="text" id="customZone" placeholder="或自訂空間名稱…">
-      <button class="btn btn-primary" onclick="addZone()">
-        ${icon('plus')} 新增空間
-      </button>
-      <div class="sep"></div>
-      <span style="font-size:12px;color:var(--text3)">共 <span id="totalZones">0</span> 個空間</span>
-    </div>
-    <div id="zones"></div>
-  `;
-  document.getElementById('customZone').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addZone();
-  });
+function renderMain(){
+  var el=document.getElementById('main-content');
+  el.innerHTML='<div class="proj-header"><div class="proj-title">'+esc(currentProject)+'</div></div>'
+    +'<div class="summary" id="summary"></div>'
+    +'<div class="add-bar">'
+    +'<select id="newZone"><option value="">選擇空間…</option><option>客廳</option><option>主臥</option><option>次臥</option><option>書房</option><option>廚房</option><option>餐廳</option><option>浴室</option><option>陽台</option><option>玄關</option><option>車庫</option><option>儲藏室</option><option>其他</option></select>'
+    +'<input type="text" id="customZone" placeholder="或自訂空間名稱…">'
+    +'<button class="btn btn-primary" onclick="addZone()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增空間</button>'
+    +'<div class="sep"></div><span style="font-size:12px;color:var(--text3)">共 <span id="totalZones">0</span> 個空間</span>'
+    +'</div><div id="zones"></div>';
+  document.getElementById('customZone').addEventListener('keydown',function(e){if(e.key==='Enter')addZone();});
   renderZones();
 }
-
-// ── Summary ──
-function renderSummary() {
-  const el = document.getElementById('summary');
-  if (!el) return;
-  const total = zones.reduce((a,z) => a+z.items.length, 0);
-  const c = { resident:0, flex:0, seasonal:0, high:0, indirect:0, direct:0, accent:0, poe:0 };
-  zones.forEach(z => z.items.forEach(i => { if(c[i.type]!==undefined) c[i.type]++; }));
-  const lighting = c.indirect + c.direct + c.accent;
-  document.getElementById('totalZones').textContent = zones.length;
-  el.innerHTML = `
-    <div class="scard"><div class="lbl">空間數</div><div class="val">${zones.length}</div><div class="sub">個區域</div></div>
-    <div class="scard"><div class="lbl">設備總數</div><div class="val">${total}</div><div class="sub">項設備</div></div>
-    <div class="scard c-resident"><div class="lbl">常駐電源</div><div class="val">${c.resident}</div><div class="sub">長期插著</div></div>
-    <div class="scard c-flex"><div class="lbl">彈性電源</div><div class="val">${c.flex}</div><div class="sub">短暫使用</div></div>
-    <div class="scard c-seasonal"><div class="lbl">季節性家電</div><div class="val">${c.seasonal}</div><div class="sub">窗邊／牆角</div></div>
-    <div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">${c.high}</div><div class="sub">廚房電器櫃</div></div>
-    <div class="scard c-lighting"><div class="lbl">燈具</div><div class="val">${lighting}</div><div class="sub">間接／直接／重點</div></div>
-  `;
+function renderSummary(){
+  var el=document.getElementById('summary');if(!el)return;
+  var total=zones.reduce(function(a,z){return a+z.items.length;},0);
+  var c={resident:0,flex:0,seasonal:0,high:0,indirect:0,direct:0,accent:0,poe:0};
+  zones.forEach(function(z){z.items.forEach(function(i){if(c[i.type]!==undefined)c[i.type]++;});});
+  var lighting=c.indirect+c.direct+c.accent;
+  document.getElementById('totalZones').textContent=zones.length;
+  el.innerHTML='<div class="scard"><div class="lbl">空間數</div><div class="val">'+zones.length+'</div><div class="sub">個區域</div></div>'
+    +'<div class="scard"><div class="lbl">設備總數</div><div class="val">'+total+'</div><div class="sub">項設備</div></div>'
+    +'<div class="scard c-resident"><div class="lbl">常駐電源</div><div class="val">'+c.resident+'</div><div class="sub">長期插著</div></div>'
+    +'<div class="scard c-flex"><div class="lbl">彈性電源</div><div class="val">'+c.flex+'</div><div class="sub">短暫使用</div></div>'
+    +'<div class="scard c-seasonal"><div class="lbl">季節性家電</div><div class="val">'+c.seasonal+'</div><div class="sub">窗邊／牆角</div></div>'
+    +'<div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">'+c.high+'</div><div class="sub">獨立迴路</div></div>'
+    +'<div class="scard c-lighting"><div class="lbl">燈具</div><div class="val">'+lighting+'</div><div class="sub">各類照明</div></div>';
 }
-
-// ── Zones ──
-function renderZones() {
+function icon(name,size){
+  size=size||14;
+  var p={plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>',chevron:'<polyline points="6 9 12 15 18 9"/>'};
+  return '<svg viewBox="0 0 24 24" style="width:'+size+'px;height:'+size+'px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">'+p[name]+'</svg>';
+}
+function renderZones(){
   renderSummary();
-  const el = document.getElementById('zones');
-  if (!el) return;
-  el.innerHTML = '';
-  zones.forEach(function(z) {
-    const div = document.createElement('div');
-    div.className = 'zone'; div.id = 'zone_'+z.id; 
-
-    const rows = z.items.map(function(it,i) {
-      const opts = TYPES.map(function(t) {
-        return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';
-      }).join('');
-      const v110 = (it.volt||'110')==='110' ? ' selected' : '';
-      const v220 = it.volt==='220' ? ' selected' : '';
-      const zid = z.id, iid = it.id;
-      const voltWidget = it.type==='poe'
-        ? '<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>'
-        : '<select class="voltage-select" onchange="upd('+zid+','+iid+',&quot;volt&quot;,this.value);updateZoneFooter('+zid+')">'
+  var el=document.getElementById('zones');if(!el)return;
+  el.innerHTML='';
+  zones.forEach(function(z){
+    var div=document.createElement('div');
+    div.className='zone';div.id='zone_'+z.id;
+    var rows=z.items.map(function(it,i){
+      var opts=TYPES.map(function(t){return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';}).join('');
+      var v110=(it.volt||'110')==='110'?' selected':'';
+      var v220=it.volt==='220'?' selected':'';
+      var voltWidget=it.type==='poe'
+        ?'<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>'
+        :'<select class="voltage-select" onchange="upd('+z.id+','+it.id+',\'volt\',this.value);updateZoneFooter('+z.id+')">'
           +'<option value="110"'+v110+'>110V</option>'
           +'<option value="220"'+v220+'>220V</option>'
           +'</select>';
-      return '<tr id="row_'+iid+'" class="type-'+it.type+'">'
-        +'<td style="width:20px;padding:8px 4px;cursor:grab;color:var(--text3)" class="row-drag-handle"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none;display:block;margin:auto"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></td>'
+      return '<tr id="row_'+it.id+'" class="type-'+it.type+'">'
+        +'<td style="width:20px;padding:8px 4px" class="row-drag-handle"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none;display:block;margin:auto"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></td>'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
-        +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+zid+','+iid+',&quot;name&quot;,this.value)" placeholder="設備名稱"></td>'
-        +'<td style="width:60px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+zid+','+iid+',&quot;qty&quot;,this.value)" style="width:50px;font-family:monospace;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0;text-align:center"></td>'
-        +'<td style="width:160px"><select onchange="upd('+zid+','+iid+',&quot;type&quot;,this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+iid+',this.value)">'+opts+'</select></td>'
+        +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+z.id+','+it.id+',\'name\',this.value)" placeholder="設備名稱"></td>'
+        +'<td style="width:60px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:50px;text-align:center"></td>'
+        +'<td style="width:155px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+it.id+',this.value)">'+opts+'</select></td>'
         +'<td style="width:70px"><div class="volt-cell">'+voltWidget+'</div></td>'
-        +'<td style="width:90px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+zid+','+iid+',&quot;watt&quot;,this.value)" placeholder="W" style="width:70px;font-size:13px;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0"></td>'
-        +'<td style="width:90px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+zid+','+iid+',&quot;height&quot;,this.value)" placeholder="高度"></td>'
-        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+zid+','+iid+',&quot;note&quot;,this.value)" placeholder="備註"></td>'
-        +'<td style="width:34px"><button class="del-btn" onclick="delItem('+zid+','+iid+')">'+icon('trash',13)+'</button></td>'
+        +'<td style="width:90px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="W" style="width:70px"></td>'
+        +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder="高度"></td>'
+        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder="備註"></td>'
+        +'<td style="width:34px"><button class="del-btn" onclick="delItem('+z.id+','+it.id+')">'+icon('trash',13)+'</button></td>'
         +'</tr>';
     }).join('');
-
-    let w110 = 0, w220 = 0;
-    z.items.forEach(function(it) {
-      if (it.type === 'flex' || it.type === 'poe') return;
-      const w = (parseFloat(it.watt) || 0) * (parseInt(it.qty) || 1);
-      if (it.volt === '220') w220 += w; else w110 += w;
+    var w110=0,w220=0;
+    z.items.forEach(function(it){
+      if(it.type==='flex'||it.type==='poe')return;
+      var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
+      if(it.volt==='220')w220+=w;else w110+=w;
     });
-    const a110 = w110 ? (w110/110).toFixed(1) : null;
-    const a220 = w220 ? (w220/220).toFixed(1) : null;
-    let footerInner = '';
-    if (a110) footerInner += '<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
-    if (a110 && a220) footerInner += '<span style="color:var(--border2)">｜</span>';
-    if (a220) footerInner += '<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
-    const footerHtml = footerInner
-      ? '<div class="zone-footer" id="footer_'+z.id+'"><span class="pwr-label">預估用電：</span>'+footerInner+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span></div>'
-      : '<div class="zone-footer" id="footer_'+z.id+'" style="color:var(--text3)">尚無耗電量資料</div>';
-
-    const bodyStyle = z.open ? '' : ' style="display:none"';
-    div.innerHTML = ''
+    var a110=w110?(w110/110).toFixed(1):null;
+    var a220=w220?(w220/220).toFixed(1):null;
+    var fi='';
+    if(a110)fi+='<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
+    if(a110&&a220)fi+='<span style="color:var(--border2)">｜</span>';
+    if(a220)fi+='<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
+    var footerHtml=fi
+      ?'<div class="zone-footer" id="footer_'+z.id+'"><span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span></div>'
+      :'<div class="zone-footer" id="footer_'+z.id+'" style="color:var(--text3)">尚無耗電量資料</div>';
+    var lockBtn=z.locked
+      ?'<button class="lock-btn active" onclick="event.stopPropagation();toggleLock('+z.id+')" title="解除鎖定"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 已鎖定</button>'
+      :'<button class="lock-btn" onclick="event.stopPropagation();toggleLock('+z.id+')" title="鎖定防誤刪"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> 鎖定</button>';
+    var bodyStyle=z.open?'':'style="display:none"';
+    div.innerHTML=''
       +'<div class="zone-head" onclick="toggleZone('+z.id+')">'
-      +'<span class="drag-handle" onclick="event.stopPropagation()">'
-      +'<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none">'
-      +'<circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/>'
-      +'<circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/>'
-      +'<circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/>'
-      +'</svg></span>'
+      +'<span class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none"><circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/></svg></span>'
       +'<span class="zone-name">'+esc(z.name)+'</span>'
       +'<span class="zone-count">'+z.items.length+' 項</span>'
       +'<span class="zone-spacer"></span>'
-      +'<button class="lock-btn'+(z.locked?' active':'')+'" onclick="event.stopPropagation();toggleLock('+z.id+')" title="'+(z.locked?'解除鎖定':'鎖定防誤刪')+'">'
-      +(z.locked
-        ? '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 已鎖定'
-        : '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> 鎖定')
-      +'</button>'
+      +lockBtn
       +'<button class="del-zone'+(z.locked?' locked':'')+'" onclick="event.stopPropagation();delZone('+z.id+')">'+icon('trash',12)+' 刪除空間</button>'
       +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
       +'</div>'
-      +'<div class="zone-body"'+bodyStyle+'>'
-      +'<table><thead><tr>'
-      +'<th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th>'
-      +'</tr></thead>'
-      +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody>'
-      +'</table>'
+      +'<div class="zone-body" '+bodyStyle+'>'
+      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
+      +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody></table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
-      +footerHtml
-      +'</div>';
+      +footerHtml+'</div>';
     el.appendChild(div);
   });
+  window._zones=zones;
   initDrag();
+  initRowDrag();
 }
-// ── Row drag & drop ──
-function initRowDrag() {
-  document.querySelectorAll('.zone').forEach(function(zoneEl) {
-    var zid = parseInt(zoneEl.id.replace('zone_',''));
-    var tbody = zoneEl.querySelector('tbody');
-    if (!tbody) return;
-
-    tbody.querySelectorAll('.row-drag-handle').forEach(function(handle) {
-      handle.addEventListener('mousedown', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var row = handle.closest('tr');
-        var iid = parseInt(row.id.replace('row_',''));
-        var rect = row.getBoundingClientRect();
-        var offsetY = e.clientY - rect.top;
-
-        var ghost = row.cloneNode(true);
-        ghost.style.cssText = 'position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,0.15);display:table;';
+function updateVoltCell(iid,type){
+  var row=document.getElementById('row_'+iid);if(!row)return;
+  var cell=row.querySelector('.volt-cell');if(!cell)return;
+  var it=zones.flatMap(function(z){return z.items;}).find(function(i){return i.id===iid;});
+  if(type==='poe'){
+    cell.innerHTML='<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>';
+  }else{
+    var v110=(!it||(it.volt||'110')==='110')?' selected':'';
+    var v220=(it&&it.volt==='220')?' selected':'';
+    cell.innerHTML='<select class="voltage-select" onchange="upd(0,'+iid+',\'volt\',this.value)">'
+      +'<option value="110"'+v110+'>110V</option>'
+      +'<option value="220"'+v220+'>220V</option>'
+      +'</select>';
+  }
+}
+function updateZoneFooter(zid){
+  var z=zones.find(function(x){return x.id===zid;});if(!z)return;
+  var w110=0,w220=0;
+  z.items.forEach(function(it){
+    if(it.type==='flex'||it.type==='poe')return;
+    var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
+    if(it.volt==='220')w220+=w;else w110+=w;
+  });
+  var a110=w110?(w110/110).toFixed(1):null;
+  var a220=w220?(w220/220).toFixed(1):null;
+  var fe=document.getElementById('footer_'+zid);if(!fe)return;
+  var fi='';
+  if(a110)fi+='<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
+  if(a110&&a220)fi+='<span style="color:var(--border2)">｜</span>';
+  if(a220)fi+='<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
+  fe.innerHTML=fi
+    ?'<span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>'
+    :'<span style="color:var(--text3)">尚無耗電量資料</span>';
+}
+function toggleLock(id){
+  var z=zones.find(function(x){return x.id===id;});if(!z)return;
+  z.locked=!z.locked;renderZones();scheduleSave();
+}
+function toggleZone(id){
+  var z=zones.find(function(x){return x.id===id;});if(z){z.open=!z.open;renderZones();}
+}
+function addZone(){
+  var sel=document.getElementById('newZone');
+  var cust=document.getElementById('customZone');
+  var name=(cust.value.trim()||sel.value).trim();
+  if(!name){cust.focus();return;}
+  zones.push({id:nextId++,name:name,open:true,locked:false,items:[]});
+  sel.value='';cust.value='';renderZones();scheduleSave();
+}
+function delZone(id){
+  if(!confirm('確定要刪除這個空間及其所有設備？'))return;
+  zones=zones.filter(function(z){return z.id!==id;});renderZones();scheduleSave();
+}
+function addItem(zid){
+  var z=zones.find(function(x){return x.id===zid;});if(!z)return;
+  z.items.push({id:nextId++,name:'',qty:1,watt:'',volt:'110',type:'resident',height:'',note:''});
+  z.open=true;renderZones();scheduleSave();
+  setTimeout(function(){var rows=document.querySelectorAll('#zone_'+zid+' tbody tr');var last=rows[rows.length-1];if(last){var inp=last.querySelector('input');if(inp)inp.focus();}},50);
+}
+function delItem(zid,iid){
+  var z=zones.find(function(x){return x.id===zid;});if(!z)return;
+  z.items=z.items.filter(function(i){return i.id!==iid;});renderZones();scheduleSave();
+}
+function upd(zid,iid,field,val){
+  var z=zones.find(function(x){return x.id===zid;});
+  if(!z){z=zones.find(function(x){return x.items.some(function(i){return i.id===iid;});});}
+  if(!z)return;
+  var it=z.items.find(function(i){return i.id===iid;});
+  if(it){it[field]=val;}
+  renderSummary();
+  var cnt=document.querySelector('#zone_'+z.id+' .zone-count');
+  if(cnt)cnt.textContent=z.items.length+' 項';
+  updateZoneFooter(z.id);
+  scheduleSave();
+}
+function initRowDrag(){
+  document.querySelectorAll('.zone').forEach(function(zoneEl){
+    var zid=parseInt(zoneEl.id.replace('zone_',''));
+    var tbody=zoneEl.querySelector('tbody');if(!tbody)return;
+    tbody.querySelectorAll('.row-drag-handle').forEach(function(handle){
+      handle.addEventListener('mousedown',function(e){
+        e.preventDefault();e.stopPropagation();
+        var row=handle.closest('tr');
+        var iid=parseInt(row.id.replace('row_',''));
+        var rect=row.getBoundingClientRect();
+        var offsetY=e.clientY-rect.top;
+        var ghost=row.cloneNode(true);
+        ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.15);display:table;';
         document.body.appendChild(ghost);
-        row.style.opacity = '0.3';
-
-        var placeholder = document.createElement('tr');
-        placeholder.innerHTML = '<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
-        tbody.insertBefore(placeholder, row);
-        row.style.display = 'none';
-
-        function onMove(e) {
-          ghost.style.top = (e.clientY - offsetY) + 'px';
-          var rows = Array.from(tbody.querySelectorAll('tr:not([style*="display: none"]):not(.placeholder)'));
-          var insertBefore = null;
-          for (var i = 0; i < rows.length; i++) {
-            if (rows[i] === placeholder) continue;
-            var r = rows[i].getBoundingClientRect();
-            if (e.clientY < r.top + r.height / 2) { insertBefore = rows[i]; break; }
-          }
-          if (insertBefore) tbody.insertBefore(placeholder, insertBefore);
-          else tbody.appendChild(placeholder);
+        row.style.opacity='0.3';
+        var ph=document.createElement('tr');
+        ph.innerHTML='<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
+        tbody.insertBefore(ph,row);row.style.display='none';
+        function onMove(e){
+          ghost.style.top=(e.clientY-offsetY)+'px';
+          var rows=Array.from(tbody.querySelectorAll('tr[id^="row_"]'));
+          var ib=null;
+          for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=rows[i];break;}}
+          if(ib)tbody.insertBefore(ph,ib);else tbody.appendChild(ph);
         }
-
-        function onUp() {
-          document.removeEventListener('mousemove', onMove);
-          document.removeEventListener('mouseup', onUp);
-          ghost.remove();
-          row.style.opacity = '';
-          row.style.display = '';
-          tbody.insertBefore(row, placeholder);
-          placeholder.remove();
-
-          // Update items order in zones
-          var z = zones.find(function(z){return z.id===zid;});
-          if (!z) return;
-          var newOrder = Array.from(tbody.querySelectorAll('tr[id^="row_"]')).map(function(r) {
-            return parseInt(r.id.replace('row_',''));
-          });
-          var reordered = [];
-          newOrder.forEach(function(id) {
-            var it = z.items.find(function(i){return i.id===id;});
-            if (it) reordered.push(it);
-          });
-          z.items = reordered;
-
-          // Update row numbers
-          tbody.querySelectorAll('tr[id^="row_"]').forEach(function(r, idx) {
-            var numCell = r.querySelector('.num-col');
-            if (numCell) numCell.textContent = String(idx+1).padStart(2,'0');
-          });
+        function onUp(){
+          document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
+          ghost.remove();row.style.opacity='';row.style.display='';
+          tbody.insertBefore(row,ph);ph.remove();
+          var z=zones.find(function(z){return z.id===zid;});if(!z)return;
+          var newOrder=Array.from(tbody.querySelectorAll('tr[id^="row_"]')).map(function(r){return parseInt(r.id.replace('row_',''));});
+          var reordered=[];newOrder.forEach(function(id){var it=z.items.find(function(i){return i.id===id;});if(it)reordered.push(it);});
+          z.items=reordered;
+          tbody.querySelectorAll('tr[id^="row_"]').forEach(function(r,idx){var nc=r.querySelector('.num-col');if(nc)nc.textContent=String(idx+1).padStart(2,'0');});
           scheduleSave();
         }
-
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseup', onUp);
+        document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
       });
     });
   });
 }
-
-// ── Drag & drop (handle-only, mouse-based) ──
-function initDrag() {
-  document.querySelectorAll('.zone').forEach(function(el) {
-    var handle = el.querySelector('.drag-handle');
-    if (!handle) return;
-
-    handle.addEventListener('mousedown', function(e) {
+function initDrag(){
+  document.querySelectorAll('.zone').forEach(function(el){
+    var handle=el.querySelector('.drag-handle');if(!handle)return;
+    handle.addEventListener('mousedown',function(e){
       e.preventDefault();
-      var zoneEl = el;
-      var container = document.getElementById('zones');
-      var startY = e.clientY;
-      var rect = zoneEl.getBoundingClientRect();
-      var offsetY = e.clientY - rect.top;
-
-      // Create ghost
-      var ghost = zoneEl.cloneNode(true);
-      ghost.style.cssText = 'position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.15);';
-      document.body.appendChild(ghost);
-      zoneEl.style.opacity = '0.3';
-
-      var placeholder = document.createElement('div');
-      placeholder.style.cssText = 'height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
-      zoneEl.parentNode.insertBefore(placeholder, zoneEl);
-      zoneEl.style.display = 'none';
-
-      function onMove(e) {
-        ghost.style.top = (e.clientY - offsetY) + 'px';
-        // Find insertion point
-        var zones = Array.from(container.querySelectorAll('.zone:not([style*="display: none"])'));
-        var insertBefore = null;
-        for (var i = 0; i < zones.length; i++) {
-          var r = zones[i].getBoundingClientRect();
-          if (e.clientY < r.top + r.height / 2) { insertBefore = zones[i]; break; }
-        }
-        if (insertBefore) container.insertBefore(placeholder, insertBefore);
-        else container.appendChild(placeholder);
+      var container=document.getElementById('zones');
+      var rect=el.getBoundingClientRect();
+      var offsetY=e.clientY-rect.top;
+      var ghost=el.cloneNode(true);
+      ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.15);';
+      document.body.appendChild(ghost);el.style.opacity='0.3';
+      var ph=document.createElement('div');
+      ph.style.cssText='height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
+      el.parentNode.insertBefore(ph,el);el.style.display='none';
+      function onMove(e){
+        ghost.style.top=(e.clientY-offsetY)+'px';
+        var zlist=Array.from(container.querySelectorAll('.zone'));
+        var ib=null;
+        for(var i=0;i<zlist.length;i++){var r=zlist[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=zlist[i];break;}}
+        if(ib)container.insertBefore(ph,ib);else container.appendChild(ph);
       }
-
-      function onUp() {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        ghost.remove();
-        zoneEl.style.opacity = '';
-        zoneEl.style.display = '';
-        container.insertBefore(zoneEl, placeholder);
-        placeholder.remove();
-
-        // Update zones array to match new DOM order
-        var newOrder = Array.from(container.querySelectorAll('.zone')).map(function(z) {
-          return parseInt(z.id.replace('zone_',''));
-        });
-        var reordered = [];
-        newOrder.forEach(function(id) {
-          var z = window._zones.find(function(z){return z.id===id;});
-          if (z) reordered.push(z);
-        });
-        zones = reordered;
-        window._zones = reordered;
-        scheduleSave();
+      function onUp(){
+        document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
+        ghost.remove();el.style.opacity='';el.style.display='';
+        container.insertBefore(el,ph);ph.remove();
+        var newOrder=Array.from(container.querySelectorAll('.zone')).map(function(z){return parseInt(z.id.replace('zone_',''));});
+        var reordered=[];newOrder.forEach(function(id){var z=window._zones.find(function(z){return z.id===id;});if(z)reordered.push(z);});
+        zones=reordered;window._zones=reordered;scheduleSave();
       }
-
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
+      document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
     });
   });
 }
-
+function exportCSV(){
+  var BOM='\uFEFF';
+  var rows=[['專案','空間','編號','設備名稱','數量','類型','電壓','耗電量(W)','插座／設備高度','備註']];
+  zones.forEach(function(z){z.items.forEach(function(it,i){
+    var t=TYPES.find(function(x){return x.key===it.type;})||TYPES[0];
+    rows.push([currentProject,z.name,i+1,it.name,it.qty||1,t.label,(it.volt||'110')+'V',it.watt||'',it.height,it.note]);
+  });});
+  var csv=BOM+rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=currentProject+'_室內電源規劃表.csv';a.click();
+}
+document.getElementById('new-proj-input').addEventListener('keydown',function(e){if(e.key==='Enter')addProject();});
+loadProjects();
 </script>
 </body>
 </html>
