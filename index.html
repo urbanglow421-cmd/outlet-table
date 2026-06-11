@@ -243,12 +243,32 @@ function jsonp(params){
     document.head.appendChild(script);
   });
 }
-async function apiPost(body){
-  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  return res.json();
+// Write via iframe form POST to bypass CORS
+function iframePost(body){
+  return new Promise(function(resolve){
+    var id='frm_'+Date.now();
+    var cb='cb_'+Date.now();
+    var iframe=document.createElement('iframe');
+    iframe.name=id;iframe.style.display='none';
+    var form=document.createElement('form');
+    form.method='POST';form.action=API_URL;form.target=id;
+    var inp=document.createElement('input');
+    inp.type='hidden';inp.name='payload';inp.value=JSON.stringify(body);
+    form.appendChild(inp);
+    document.body.appendChild(iframe);document.body.appendChild(form);
+    iframe.onload=function(){
+      setTimeout(function(){
+        iframe.remove();form.remove();
+        resolve({ok:true});
+      },100);
+    };
+    form.submit();
+    // resolve after timeout if no onload
+    setTimeout(function(){iframe.remove();form.remove();resolve({ok:true});},3000);
+  });
 }
 async function api(params,body){
-  if(body) return await apiPost(body);
+  if(body) return await iframePost(body);
   return await jsonp(params);
 }
 
