@@ -108,6 +108,9 @@ tbody tr:not(:last-child) td{border-bottom:1px solid var(--border)}
 td{padding:8px 12px;color:var(--text);vertical-align:middle;user-select:text}
 td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:13px;width:100%;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0}
 td input::placeholder{color:var(--text3)}
+.watt-wrap{display:flex;align-items:center;gap:3px}
+.watt-unit{font-size:12px;color:var(--text3);display:none}
+.watt-wrap input:not(:placeholder-shown) + .watt-unit{display:inline}
 td input:focus{background:var(--surface2);border-radius:4px;padding:2px 6px;margin:-2px -6px;width:calc(100% + 12px)}
 td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);padding:3px 8px;height:26px;cursor:pointer;outline:none}
 td select:focus{border-color:var(--accent)}
@@ -417,8 +420,8 @@ function renderZones(){
         +'<td style="width:55px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:45px;text-align:center"></td>'
         +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
         +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+powerOpts+'</select></td>'
-        +'<td style="width:85px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:75px"></td>'
-        +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder="高度"></td>'
+        +'<td style="width:85px"><div class="watt-wrap"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:65px"><span class="watt-unit">W</span></div></td>'
+        +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder=""></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder=""></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+z.id+','+it.id+')">'+icon('trash',13)+'</button></td>'
         +'</tr>';
