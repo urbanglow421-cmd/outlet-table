@@ -230,10 +230,8 @@ function dbDelete(table, params){
 // ── Projects = distinct project names in items table ──
 function loadProjects(){
   setSyncStatus('busy','載入中…');
-  dbGet('items', {'select':'project', 'order':'project'}).then(function(rows){
-    var seen = {}, list = [];
-    (rows||[]).forEach(function(r){if(r.project && !seen[r.project]){seen[r.project]=1;list.push(r.project);}});
-    projects = list;
+  dbGet('projects', {'select':'name','order':'created_at'}).then(function(rows){
+    projects = (rows||[]).map(function(r){return r.name;});
     renderSidebar();
     if(projects.length>0) switchProject(projects[0]);
     else setSyncStatus('ok','已連線');
@@ -267,13 +265,17 @@ function addProject(){
   var name=inp.value.trim();
   if(!name){inp.focus();return;}
   if(projects.indexOf(name)>=0){alert('已有同名專案');return;}
-  projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
-  renderSidebar();renderMain();saveProject();
+  dbPost('projects',[{name:name}]).then(function(){
+    projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
+    renderSidebar();renderMain();
+  }).catch(function(e){console.error(e);alert('新增失敗');});
 }
 function deleteProject(name){
   if(!confirm('確定要刪除專案「'+name+'」？'))return;
   setSyncStatus('busy','刪除中…');
   dbDelete('items',{'project':'eq.'+name}).then(function(){
+    return dbDelete('projects',{'name':'eq.'+name});
+  }).then(function(){
     projects=projects.filter(function(p){return p!==name;});
     if(currentProject===name){currentProject='';zones=[];document.getElementById('main-content').innerHTML='<div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>';}
     renderSidebar();setSyncStatus('ok','已刪除');
