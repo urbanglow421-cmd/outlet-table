@@ -11,10 +11,13 @@
   --bg:#F5F3EE;--surface:#fff;--surface2:#F0EDE6;--border:#D8D3C8;--border2:#C4BFB2;
   --text:#1C1A16;--text2:#6B6659;--text3:#9B9485;
   --accent:#2C5F3F;--accent-light:#E8F2EC;--accent-text:#1A3D28;
-  --amber:#8A5C0A;--amber-light:#FEF3DC;--red:#8A1A1A;--red-light:#FDEAEA;
-  --blue:#1A3A6B;--blue-light:#E8EEFB;--purple:#6B3FA0;--teal:#0E7C86;
-  --sidebar:220px;--legend:200px;--radius:8px;--radius-lg:12px;
+  --red:#8A1A1A;--red-light:#FDEAEA;
+  --sidebar:220px;--legend:210px;--radius:8px;--radius-lg:12px;
   --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
+  --c-socket:#0D7377;--c-socket-bg:rgba(13,115,119,.07);--c-socket-bg2:rgba(13,115,119,.14);
+  --c-high:#E05C2A;--c-high-bg:rgba(224,92,42,.07);--c-high-bg2:rgba(224,92,42,.14);
+  --c-light:#C49A00;--c-light-bg:rgba(196,154,0,.07);--c-light-bg2:rgba(196,154,0,.14);
+  --c-poe:#3D52A0;--c-poe-bg:rgba(61,82,160,.07);--c-poe-bg2:rgba(61,82,160,.14);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;display:flex;flex-direction:column}
@@ -43,10 +46,9 @@ aside{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:
 .proj-del{margin-left:auto;opacity:0;width:20px;height:20px;border:none;background:transparent;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
 .proj-item:hover .proj-del{opacity:1}
 .proj-del:hover{background:var(--red-light);color:var(--red)}
-.proj-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.proj-del svg,.proj-drag svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .proj-rename-input{flex:1;font-family:'Noto Sans TC',sans-serif;font-size:13px;border:none;background:transparent;color:var(--accent-text);outline:1px solid var(--accent);border-radius:3px;padding:0 4px;min-width:0}
 .proj-drag{display:flex;align-items:center;width:14px;flex-shrink:0;color:var(--text3);cursor:grab}
-.proj-drag:active{cursor:grabbing}
 .proj-item.proj-dragging{opacity:.35}
 .proj-item.proj-drag-over{outline:2px dashed var(--accent);outline-offset:-2px;border-radius:4px}
 .sidebar-add{padding:12px;border-top:1px solid var(--border)}
@@ -57,23 +59,22 @@ main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
 #empty-state .big{font-size:40px}
 .sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:20px}
 .sync-ok{background:var(--accent-light);color:var(--accent-text)}
-.sync-busy{background:var(--amber-light);color:var(--amber)}
+.sync-busy{background:#FEF3DC;color:#8A5C0A}
 .sync-err{background:var(--red-light);color:var(--red)}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .sync-busy .sync-dot{animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .proj-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .proj-title{font-size:20px;font-weight:700;color:var(--text)}
-.summary{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:24px}
+.summary{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px}
 .scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
 .scard .lbl{font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.05em}
 .scard .val{font-size:24px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);line-height:1}
 .scard .sub{font-size:11px;color:var(--text3);margin-top:3px}
-.scard.c-resident{border-top:3px solid #1A3A6B}
-.scard.c-flex{border-top:3px solid var(--accent)}
-.scard.c-seasonal{border-top:3px solid #8A5C0A}
-.scard.c-high{border-top:3px solid #8A1A1A}
-.scard.c-lighting{border-top:3px solid #6B3FA0}
+.scard.c-socket{border-top:3px solid var(--c-socket)}
+.scard.c-high{border-top:3px solid var(--c-high)}
+.scard.c-light{border-top:3px solid var(--c-light)}
+.scard.c-poe{border-top:3px solid var(--c-poe)}
 .add-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
 .add-bar select,.add-bar input[type=text]{font-family:'Noto Sans TC',sans-serif;font-size:13px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none}
 .add-bar select:focus,.add-bar input:focus{border-color:var(--accent)}
@@ -90,25 +91,23 @@ main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
 .zone-chevron{color:var(--text3);transition:transform .2s}
 .zone-chevron.open{transform:rotate(180deg)}
 .drag-handle{display:flex;align-items:center;width:18px;flex-shrink:0;color:var(--text3);cursor:grab;user-select:none}
-.drag-handle:active{cursor:grabbing}
 .row-drag-handle{cursor:grab;color:var(--text3);user-select:none}
 .row-drag-handle:hover{color:var(--text)}
 /* Row colors */
-tbody tr.type-resident td{background:rgba(26,58,107,.05)}
-tbody tr.type-flex td{background:rgba(26,58,107,.05)}
-tbody tr.type-seasonal td{background:rgba(26,58,107,.05)}
-tbody tr.type-high td{background:rgba(138,26,26,.05)}
-tbody tr.type-direct td,tbody tr.type-indirect td,tbody tr.type-accent td{background:rgba(107,63,160,.05)}
-tbody tr.type-poe td{background:rgba(14,124,134,.05)}
-tbody tr.type-resident:hover td,tbody tr.type-flex:hover td,tbody tr.type-seasonal:hover td{background:rgba(26,58,107,.1)}
-tbody tr.type-high:hover td{background:rgba(138,26,26,.1)}
-tbody tr.type-direct:hover td,tbody tr.type-indirect:hover td,tbody tr.type-accent:hover td{background:rgba(107,63,160,.1)}
-tbody tr.type-poe:hover td{background:rgba(14,124,134,.1)}
+tbody tr.type-resident td,tbody tr.type-flex td{background:var(--c-socket-bg)}
+tbody tr.type-high td{background:var(--c-high-bg)}
+tbody tr.type-direct td,tbody tr.type-indirect td,tbody tr.type-accent td{background:var(--c-light-bg)}
+tbody tr.type-poe td{background:var(--c-poe-bg)}
+tbody tr.type-resident:hover td,tbody tr.type-flex:hover td{background:var(--c-socket-bg2)}
+tbody tr.type-high:hover td{background:var(--c-high-bg2)}
+tbody tr.type-direct:hover td,tbody tr.type-indirect:hover td,tbody tr.type-accent:hover td{background:var(--c-light-bg2)}
+tbody tr.type-poe:hover td{background:var(--c-poe-bg2)}
 table{width:100%;border-collapse:collapse}
 thead th{font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--text3);text-transform:uppercase;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
 tbody tr:not(:last-child) td{border-bottom:1px solid var(--border)}
 td{padding:8px 12px;color:var(--text);vertical-align:middle;user-select:text}
 td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:13px;width:100%;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0}
+td input::placeholder{color:var(--text3)}
 td input:focus{background:var(--surface2);border-radius:4px;padding:2px 6px;margin:-2px -6px;width:calc(100% + 12px)}
 td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);padding:3px 8px;height:26px;cursor:pointer;outline:none}
 td select:focus{border-color:var(--accent)}
@@ -122,31 +121,30 @@ td select:focus{border-color:var(--accent)}
 .del-zone svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .lock-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
 .lock-btn:hover{background:var(--surface2);color:var(--text)}
-.lock-btn.active{background:var(--amber-light);color:var(--amber);border-color:var(--amber-light)}
+.lock-btn.active{background:#FEF3DC;color:#8A5C0A;border-color:#FEF3DC}
 .lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .add-item-row{padding:9px 12px;border-top:1px solid var(--border);background:var(--surface2)}
 .tbl-empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
-.zone-footer{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border);background:var(--surface2);font-size:12px;color:var(--text2)}
-.zone-footer .pwr-label{color:var(--text3)}
-.zone-footer .pwr-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text)}
-.zone-footer .pwr-110{color:#1A3A6B}
-.zone-footer .pwr-220{color:#8A1A1A}
-.voltage-select{font-family:'Noto Sans TC',sans-serif;font-size:11px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);padding:1px 4px;height:20px;cursor:pointer;outline:none}
+.zone-footer{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border);background:var(--surface2);font-size:12px}
+.pwr-label{color:var(--text3)}
+.pwr-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text)}
+.pwr-110{color:var(--c-socket)}
+.pwr-220{color:var(--c-high)}
 .legend-aside{width:var(--legend);flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;display:flex;flex-direction:column}
 .legend-head{padding:16px 14px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border);flex-shrink:0}
 .legend-body{padding:12px 0;flex:1;overflow-y:auto}
-.legend-section{padding:6px 14px 10px;border-bottom:1px solid var(--border);margin-bottom:2px}
+.legend-section{padding:6px 14px 10px;border-bottom:1px solid var(--border)}
 .legend-section:last-child{border-bottom:none}
 .legend-section-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
 .legend-item{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
 .legend-item:last-child{margin-bottom:0}
 .legend-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;margin-bottom:2px}
-.legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .legend-desc{font-size:11px;color:var(--text3);line-height:1.5}
-.dot-resident,.dot-flex,.dot-seasonal{background:#1A3A6B}
-.dot-high{background:#8A1A1A}
-.dot-lighting{background:#6B3FA0}
-.dot-poe{background:#0E7C86}
+.dot-socket{background:var(--c-socket)}
+.dot-high{background:var(--c-high)}
+.dot-light{background:var(--c-light)}
+.dot-poe{background:var(--c-poe)}
 </style>
 </head>
 <body>
@@ -189,20 +187,21 @@ td select:focus{border-color:var(--accent)}
     <div class="legend-body">
       <div class="legend-section">
         <div class="legend-section-title">插座</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-resident"></span>長期使用</div><div class="legend-desc">常駐電源，長期插著不拔。如電視、冰箱、路由器。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-flex"></span>短暫使用</div><div class="legend-desc">彈性電源，偶爾使用後拔除。如吹風機、吸塵器、筆電。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-seasonal"></span>窗邊／牆角</div><div class="legend-desc">季節性家電，依季節使用。如電風扇、電暖器、除濕機。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>常駐插座</div><div class="legend-desc">長期插著不拔。如電視、冰箱、音響。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用後拔除，或預留備用。如吹風機、吸塵器。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div></div>
       </div>
       <div class="legend-section">
         <div class="legend-section-title">燈具</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>直接照明</div><div class="legend-desc">光源直接照射空間的主要照明。如吸頂燈、筒燈、軌道燈。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>間接照明</div><div class="legend-desc">光源透過反射營造氛圍。如燈帶、崁燈、壁燈。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-lighting"></span>重點照明</div><div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈、畫燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接照明</div><div class="legend-desc">主要照明，直接照射空間。如吸頂燈、筒燈、軌道燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>間接照明</div><div class="legend-desc">透過反射營造氛圍。如燈帶、壁燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>重點照明</div><div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈。</div></div>
       </div>
       <div class="legend-section">
-        <div class="legend-section-title">網路供電</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE 供電</div><div class="legend-desc">透過網路線供電，不需要插座。如 IP 攝影機、無線基地台、門禁讀卡機。</div></div>
+        <div class="legend-section-title">供電方式</div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>插座 110V / 220V</div><div class="legend-desc">一般電器插座迴路。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接配線 110V</div><div class="legend-desc">燈具走天花板或牆面配線，不需插座。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE</div><div class="legend-desc">透過網路線供電。如 IP 攝影機、無線基地台。</div></div>
       </div>
     </div>
   </aside>
@@ -210,15 +209,23 @@ td select:focus{border-color:var(--accent)}
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
 const TYPES = [
-  {key:'resident',label:'長期使用',desc:'常駐電源'},
-  {key:'flex',label:'短暫使用',desc:'彈性電源'},
-  {key:'seasonal',label:'窗邊／牆角',desc:'季節性家電'},
-  {key:'high',label:'高功率家電',desc:'獨立迴路'},
-  {key:'direct',label:'直接照明',desc:'燈具'},
-  {key:'indirect',label:'間接照明',desc:'燈具'},
-  {key:'accent',label:'重點照明',desc:'燈具'},
-  {key:'poe',label:'PoE 供電',desc:'網路線供電'},
+  {key:'resident', label:'常駐插座', group:'socket'},
+  {key:'flex',     label:'短暫使用', group:'socket'},
+  {key:'high',     label:'高功率家電', group:'socket'},
+  {key:'direct',   label:'直接照明', group:'light'},
+  {key:'indirect', label:'間接照明', group:'light'},
+  {key:'accent',   label:'重點照明', group:'light'},
+  {key:'poe',      label:'PoE 供電', group:'poe'},
 ];
+const POWERS = [
+  {key:'s110', label:'插座 110V'},
+  {key:'s220', label:'插座 220V'},
+  {key:'wire', label:'直接配線 110V'},
+  {key:'poe',  label:'PoE'},
+];
+// Map type to default power
+const TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire',poe:'poe'};
+
 let projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -247,6 +254,7 @@ async function api(params,body){
   }
   return await jsonp(params);
 }
+
 async function loadProjects(){
   setSyncStatus('busy','載入中…');
   try{
@@ -263,6 +271,10 @@ async function loadProject(name){
   try{
     var data=await api({action:'get',project:name});
     zones=data.zones||[];
+    // migrate old data: add power field if missing
+    zones.forEach(function(z){z.items.forEach(function(it){
+      if(!it.power) it.power=TYPE_POWER[it.type]||'s110';
+    });});
     nextId=zones.length?Math.max.apply(null,zones.flatMap(function(z){return[z.id].concat(z.items.map(function(i){return i.id;}))}))+1:1;
     renderMain();
     setSyncStatus('ok','已同步');
@@ -276,6 +288,7 @@ async function saveProject(){
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1200);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
+
 async function addProject(){
   var inp=document.getElementById('new-proj-input');
   var name=inp.value.trim();
@@ -294,25 +307,25 @@ async function deleteProject(name){
     renderSidebar();setSyncStatus('ok','已刪除');
   }catch(e){setSyncStatus('err','刪除失敗');}
 }
+
 function renderSidebar(){
   var el=document.getElementById('proj-list');
   if(projects.length===0){el.innerHTML='<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>';return;}
   el.innerHTML=projects.map(function(p){
     return '<div class="proj-item'+(p===currentProject?' active':'')+'" id="proj_'+encodeURIComponent(p)+'" draggable="true" onclick="switchProject(\''+esc(p)+'\')" ondblclick="startRename(event,\''+esc(p)+'\')">'
-      +'<span class="proj-drag" onclick="event.stopPropagation()" title="拖曳排序"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></span>'
+      +'<span class="proj-drag" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></span>'
       +'<span class="proj-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p)+'</span>'
       +'<button class="proj-del" onclick="event.stopPropagation();deleteProject(\''+esc(p)+'\')" title="刪除"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>'
       +'</div>';
   }).join('');
   initProjDrag();
 }
+
 function startRename(e,name){
   e.stopPropagation();
-  var item=document.getElementById('proj_'+encodeURIComponent(name));
-  if(!item)return;
+  var item=document.getElementById('proj_'+encodeURIComponent(name));if(!item)return;
   var label=item.querySelector('.proj-label');
-  var inp=document.createElement('input');
-  inp.className='proj-rename-input';inp.value=name;
+  var inp=document.createElement('input');inp.className='proj-rename-input';inp.value=name;
   inp.onclick=function(e){e.stopPropagation();};
   label.replaceWith(inp);inp.focus();inp.select();
   async function commit(){
@@ -332,6 +345,7 @@ function startRename(e,name){
   inp.addEventListener('blur',commit);
   inp.addEventListener('keydown',function(e){if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.removeEventListener('blur',commit);renderSidebar();}});
 }
+
 var projDragSrc=null;
 function initProjDrag(){
   document.querySelectorAll('.proj-item').forEach(function(el){
@@ -346,6 +360,7 @@ function initProjDrag(){
     });
   });
 }
+
 function renderMain(){
   var el=document.getElementById('main-content');
   el.innerHTML='<div class="proj-header"><div class="proj-title">'+esc(currentProject)+'</div></div>'
@@ -359,26 +374,32 @@ function renderMain(){
   document.getElementById('customZone').addEventListener('keydown',function(e){if(e.key==='Enter')addZone();});
   renderZones();
 }
+
 function renderSummary(){
   var el=document.getElementById('summary');if(!el)return;
   var total=zones.reduce(function(a,z){return a+z.items.length;},0);
-  var c={resident:0,flex:0,seasonal:0,high:0,indirect:0,direct:0,accent:0,poe:0};
-  zones.forEach(function(z){z.items.forEach(function(i){if(c[i.type]!==undefined)c[i.type]++;});});
-  var lighting=c.indirect+c.direct+c.accent;
+  var socket=0,high=0,light=0,poe=0;
+  zones.forEach(function(z){z.items.forEach(function(i){
+    if(i.type==='resident'||i.type==='flex') socket++;
+    else if(i.type==='high') high++;
+    else if(i.type==='direct'||i.type==='indirect'||i.type==='accent') light++;
+    else if(i.type==='poe') poe++;
+  });});
   document.getElementById('totalZones').textContent=zones.length;
   el.innerHTML='<div class="scard"><div class="lbl">空間數</div><div class="val">'+zones.length+'</div><div class="sub">個區域</div></div>'
     +'<div class="scard"><div class="lbl">設備總數</div><div class="val">'+total+'</div><div class="sub">項設備</div></div>'
-    +'<div class="scard c-resident"><div class="lbl">常駐電源</div><div class="val">'+c.resident+'</div><div class="sub">長期插著</div></div>'
-    +'<div class="scard c-flex"><div class="lbl">彈性電源</div><div class="val">'+c.flex+'</div><div class="sub">短暫使用</div></div>'
-    +'<div class="scard c-seasonal"><div class="lbl">季節性家電</div><div class="val">'+c.seasonal+'</div><div class="sub">窗邊／牆角</div></div>'
-    +'<div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">'+c.high+'</div><div class="sub">獨立迴路</div></div>'
-    +'<div class="scard c-lighting"><div class="lbl">燈具</div><div class="val">'+lighting+'</div><div class="sub">各類照明</div></div>';
+    +'<div class="scard c-socket"><div class="lbl">常駐／備用插座</div><div class="val">'+socket+'</div><div class="sub">插座類</div></div>'
+    +'<div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">'+high+'</div><div class="sub">獨立迴路</div></div>'
+    +'<div class="scard c-light"><div class="lbl">燈具</div><div class="val">'+light+'</div><div class="sub">各類照明</div></div>'
+    +'<div class="scard c-poe"><div class="lbl">PoE 供電</div><div class="val">'+poe+'</div><div class="sub">網路線供電</div></div>';
 }
+
 function icon(name,size){
   size=size||14;
   var p={plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>',chevron:'<polyline points="6 9 12 15 18 9"/>'};
   return '<svg viewBox="0 0 24 24" style="width:'+size+'px;height:'+size+'px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">'+p[name]+'</svg>';
 }
+
 function renderZones(){
   renderSummary();
   var el=document.getElementById('zones');if(!el)return;
@@ -387,33 +408,28 @@ function renderZones(){
     var div=document.createElement('div');
     div.className='zone';div.id='zone_'+z.id;
     var rows=z.items.map(function(it,i){
-      var opts=TYPES.map(function(t){return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';}).join('');
-      var v110=(it.volt||'110')==='110'?' selected':'';
-      var v220=it.volt==='220'?' selected':'';
-      var voltWidget=it.type==='poe'
-        ?'<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>'
-        :'<select class="voltage-select" onchange="upd('+z.id+','+it.id+',\'volt\',this.value);updateZoneFooter('+z.id+')">'
-          +'<option value="110"'+v110+'>110V</option>'
-          +'<option value="220"'+v220+'>220V</option>'
-          +'</select>';
+      var typeOpts=TYPES.map(function(t){return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';}).join('');
+      var powerOpts=POWERS.map(function(p){return '<option value="'+p.key+'"'+((it.power||TYPE_POWER[it.type]||'s110')===p.key?' selected':'')+'>'+p.label+'</option>';}).join('');
       return '<tr id="row_'+it.id+'" class="type-'+it.type+'">'
         +'<td style="width:20px;padding:8px 4px" class="row-drag-handle"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none;display:block;margin:auto"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></td>'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+z.id+','+it.id+',\'name\',this.value)" placeholder="設備名稱"></td>'
-        +'<td style="width:60px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:50px;text-align:center"></td>'
-        +'<td style="width:155px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value;updateVoltCell('+it.id+',this.value)">'+opts+'</select></td>'
-        +'<td style="width:70px"><div class="volt-cell">'+voltWidget+'</div></td>'
-        +'<td style="width:90px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="W" style="width:70px"></td>'
+        +'<td style="width:55px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:45px;text-align:center"></td>'
+        +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
+        +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+powerOpts+'</select></td>'
+        +'<td style="width:85px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:75px"></td>'
         +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder="高度"></td>'
-        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder="備註"></td>'
+        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder=""></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+z.id+','+it.id+')">'+icon('trash',13)+'</button></td>'
         +'</tr>';
     }).join('');
+    // Power totals
     var w110=0,w220=0;
     z.items.forEach(function(it){
       if(it.type==='flex'||it.type==='poe')return;
       var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-      if(it.volt==='220')w220+=w;else w110+=w;
+      var pw=it.power||TYPE_POWER[it.type]||'s110';
+      if(pw==='s220')w220+=w;else w110+=w;
     });
     var a110=w110?(w110/110).toFixed(1):null;
     var a220=w220?(w220/220).toFixed(1):null;
@@ -439,7 +455,7 @@ function renderZones(){
       +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
       +'</div>'
       +'<div class="zone-body" '+bodyStyle+'>'
-      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>電壓</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
+      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>供電方式</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
       +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody></table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml+'</div>';
@@ -449,28 +465,15 @@ function renderZones(){
   initDrag();
   initRowDrag();
 }
-function updateVoltCell(iid,type){
-  var row=document.getElementById('row_'+iid);if(!row)return;
-  var cell=row.querySelector('.volt-cell');if(!cell)return;
-  var it=zones.flatMap(function(z){return z.items;}).find(function(i){return i.id===iid;});
-  if(type==='poe'){
-    cell.innerHTML='<span style="font-size:12px;color:var(--text3);padding:0 4px">－</span>';
-  }else{
-    var v110=(!it||(it.volt||'110')==='110')?' selected':'';
-    var v220=(it&&it.volt==='220')?' selected':'';
-    cell.innerHTML='<select class="voltage-select" onchange="upd(0,'+iid+',\'volt\',this.value)">'
-      +'<option value="110"'+v110+'>110V</option>'
-      +'<option value="220"'+v220+'>220V</option>'
-      +'</select>';
-  }
-}
+
 function updateZoneFooter(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
   var w110=0,w220=0;
   z.items.forEach(function(it){
     if(it.type==='flex'||it.type==='poe')return;
     var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-    if(it.volt==='220')w220+=w;else w110+=w;
+    var pw=it.power||TYPE_POWER[it.type]||'s110';
+    if(pw==='s220')w220+=w;else w110+=w;
   });
   var a110=w110?(w110/110).toFixed(1):null;
   var a220=w220?(w220/220).toFixed(1):null;
@@ -483,16 +486,12 @@ function updateZoneFooter(zid){
     ?'<span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>'
     :'<span style="color:var(--text3)">尚無耗電量資料</span>';
 }
-function toggleLock(id){
-  var z=zones.find(function(x){return x.id===id;});if(!z)return;
-  z.locked=!z.locked;renderZones();scheduleSave();
-}
-function toggleZone(id){
-  var z=zones.find(function(x){return x.id===id;});if(z){z.open=!z.open;renderZones();}
-}
+
+function toggleLock(id){var z=zones.find(function(x){return x.id===id;});if(!z)return;z.locked=!z.locked;renderZones();scheduleSave();}
+function toggleZone(id){var z=zones.find(function(x){return x.id===id;});if(z){z.open=!z.open;renderZones();}}
+
 function addZone(){
-  var sel=document.getElementById('newZone');
-  var cust=document.getElementById('customZone');
+  var sel=document.getElementById('newZone'),cust=document.getElementById('customZone');
   var name=(cust.value.trim()||sel.value).trim();
   if(!name){cust.focus();return;}
   zones.push({id:nextId++,name:name,open:true,locked:false,items:[]});
@@ -504,7 +503,7 @@ function delZone(id){
 }
 function addItem(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
-  z.items.push({id:nextId++,name:'',qty:1,watt:'',volt:'110',type:'resident',height:'',note:''});
+  z.items.push({id:nextId++,name:'',qty:1,watt:'',power:'s110',type:'resident',height:'',note:''});
   z.open=true;renderZones();scheduleSave();
   setTimeout(function(){var rows=document.querySelectorAll('#zone_'+zid+' tbody tr');var last=rows[rows.length-1];if(last){var inp=last.querySelector('input');if(inp)inp.focus();}},50);
 }
@@ -514,16 +513,17 @@ function delItem(zid,iid){
 }
 function upd(zid,iid,field,val){
   var z=zones.find(function(x){return x.id===zid;});
-  if(!z){z=zones.find(function(x){return x.items.some(function(i){return i.id===iid;});});}
+  if(!z) z=zones.find(function(x){return x.items.some(function(i){return i.id===iid;});});
   if(!z)return;
   var it=z.items.find(function(i){return i.id===iid;});
-  if(it){it[field]=val;}
+  if(it) it[field]=val;
   renderSummary();
   var cnt=document.querySelector('#zone_'+z.id+' .zone-count');
   if(cnt)cnt.textContent=z.items.length+' 項';
   updateZoneFooter(z.id);
   scheduleSave();
 }
+
 function initRowDrag(){
   document.querySelectorAll('.zone').forEach(function(zoneEl){
     var zid=parseInt(zoneEl.id.replace('zone_',''));
@@ -531,21 +531,17 @@ function initRowDrag(){
     tbody.querySelectorAll('.row-drag-handle').forEach(function(handle){
       handle.addEventListener('mousedown',function(e){
         e.preventDefault();e.stopPropagation();
-        var row=handle.closest('tr');
-        var iid=parseInt(row.id.replace('row_',''));
-        var rect=row.getBoundingClientRect();
-        var offsetY=e.clientY-rect.top;
+        var row=handle.closest('tr'),iid=parseInt(row.id.replace('row_',''));
+        var rect=row.getBoundingClientRect(),offsetY=e.clientY-rect.top;
         var ghost=row.cloneNode(true);
-        ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.15);display:table;';
-        document.body.appendChild(ghost);
-        row.style.opacity='0.3';
+        ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.15);display:table;';
+        document.body.appendChild(ghost);row.style.opacity='.3';
         var ph=document.createElement('tr');
         ph.innerHTML='<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
         tbody.insertBefore(ph,row);row.style.display='none';
         function onMove(e){
           ghost.style.top=(e.clientY-offsetY)+'px';
-          var rows=Array.from(tbody.querySelectorAll('tr[id^="row_"]'));
-          var ib=null;
+          var rows=Array.from(tbody.querySelectorAll('tr[id^="row_"]')),ib=null;
           for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=rows[i];break;}}
           if(ib)tbody.insertBefore(ph,ib);else tbody.appendChild(ph);
         }
@@ -565,24 +561,22 @@ function initRowDrag(){
     });
   });
 }
+
 function initDrag(){
   document.querySelectorAll('.zone').forEach(function(el){
     var handle=el.querySelector('.drag-handle');if(!handle)return;
     handle.addEventListener('mousedown',function(e){
       e.preventDefault();
-      var container=document.getElementById('zones');
-      var rect=el.getBoundingClientRect();
-      var offsetY=e.clientY-rect.top;
+      var container=document.getElementById('zones'),rect=el.getBoundingClientRect(),offsetY=e.clientY-rect.top;
       var ghost=el.cloneNode(true);
-      ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:0.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.15);';
-      document.body.appendChild(ghost);el.style.opacity='0.3';
+      ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.15);';
+      document.body.appendChild(ghost);el.style.opacity='.3';
       var ph=document.createElement('div');
       ph.style.cssText='height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
       el.parentNode.insertBefore(ph,el);el.style.display='none';
       function onMove(e){
         ghost.style.top=(e.clientY-offsetY)+'px';
-        var zlist=Array.from(container.querySelectorAll('.zone'));
-        var ib=null;
+        var zlist=Array.from(container.querySelectorAll('.zone')),ib=null;
         for(var i=0;i<zlist.length;i++){var r=zlist[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=zlist[i];break;}}
         if(ib)container.insertBefore(ph,ib);else container.appendChild(ph);
       }
@@ -598,18 +592,21 @@ function initDrag(){
     });
   });
 }
+
 function exportCSV(){
   var BOM='\uFEFF';
-  var rows=[['專案','空間','編號','設備名稱','數量','類型','電壓','耗電量(W)','插座／設備高度','備註']];
+  var rows=[['專案','空間','編號','設備名稱','數量','類型','供電方式','耗電量(W)','插座／設備高度','備註']];
   zones.forEach(function(z){z.items.forEach(function(it,i){
     var t=TYPES.find(function(x){return x.key===it.type;})||TYPES[0];
-    rows.push([currentProject,z.name,i+1,it.name,it.qty||1,t.label,(it.volt||'110')+'V',it.watt||'',it.height,it.note]);
+    var pw=POWERS.find(function(x){return x.key===(it.power||TYPE_POWER[it.type]||'s110');})||POWERS[0];
+    rows.push([currentProject,z.name,i+1,it.name,it.qty||1,t.label,pw.label,it.watt||'',it.height,it.note]);
   });});
   var csv=BOM+rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
   var a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download=currentProject+'_室內電源規劃表.csv';a.click();
 }
+
 document.getElementById('new-proj-input').addEventListener('keydown',function(e){if(e.key==='Enter')addProject();});
 loadProjects();
 </script>
