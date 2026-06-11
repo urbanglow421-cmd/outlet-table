@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --bg:#F5F3EE;--surface:#fff;--surface2:#F0EDE6;--border:#D8D3C8;--border2:#C4BFB2;
   --text:#1C1A16;--text2:#6B6659;--text3:#9B9485;
   --accent:#2C5F3F;--accent-light:#E8F2EC;--accent-text:#1A3D28;
@@ -46,7 +46,7 @@ aside{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:
 .proj-del{margin-left:auto;opacity:0;width:20px;height:20px;border:none;background:transparent;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
 .proj-item:hover .proj-del{opacity:1}
 .proj-del:hover{background:var(--red-light);color:var(--red)}
-.proj-del svg,.proj-drag svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.proj-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .proj-rename-input{flex:1;font-family:'Noto Sans TC',sans-serif;font-size:13px;border:none;background:transparent;color:var(--accent-text);outline:1px solid var(--accent);border-radius:3px;padding:0 4px;min-width:0}
 .proj-drag{display:flex;align-items:center;width:14px;flex-shrink:0;color:var(--text3);cursor:grab}
 .proj-item.proj-dragging{opacity:.35}
@@ -91,9 +91,8 @@ main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
 .zone-chevron{color:var(--text3);transition:transform .2s}
 .zone-chevron.open{transform:rotate(180deg)}
 .drag-handle{display:flex;align-items:center;width:18px;flex-shrink:0;color:var(--text3);cursor:grab;user-select:none}
-.row-drag-handle{cursor:grab;color:var(--text3);user-select:none}
+.row-drag-handle{cursor:grab;color:var(--text3);user-select:none;text-align:center}
 .row-drag-handle:hover{color:var(--text)}
-/* Row colors */
 tbody tr.type-resident td,tbody tr.type-flex td{background:var(--c-socket-bg)}
 tbody tr.type-high td{background:var(--c-high-bg)}
 tbody tr.type-direct td,tbody tr.type-indirect td,tbody tr.type-accent td{background:var(--c-light-bg)}
@@ -108,9 +107,6 @@ tbody tr:not(:last-child) td{border-bottom:1px solid var(--border)}
 td{padding:8px 12px;color:var(--text);vertical-align:middle;user-select:text}
 td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;font-size:13px;width:100%;border:none;background:transparent;color:var(--text);outline:none;padding:2px 0}
 td input::placeholder{color:var(--text3)}
-.watt-wrap{display:flex;align-items:center;gap:3px}
-.watt-unit{font-size:12px;color:var(--text3);display:none}
-.watt-wrap input:not(:placeholder-shown) + .watt-unit{display:inline}
 td input:focus{background:var(--surface2);border-radius:4px;padding:2px 6px;margin:-2px -6px;width:calc(100% + 12px)}
 td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);padding:3px 8px;height:26px;cursor:pointer;outline:none}
 td select:focus{border-color:var(--accent)}
@@ -121,16 +117,15 @@ td select:focus{border-color:var(--accent)}
 .del-zone{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
 .del-zone:hover{background:var(--red-light);color:var(--red);border-color:var(--red-light)}
 .del-zone.locked{opacity:.3;cursor:not-allowed;pointer-events:none}
-.del-zone svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.del-zone svg,.lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .lock-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
 .lock-btn:hover{background:var(--surface2);color:var(--text)}
 .lock-btn.active{background:#FEF3DC;color:#8A5C0A;border-color:#FEF3DC}
-.lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .add-item-row{padding:9px 12px;border-top:1px solid var(--border);background:var(--surface2)}
 .tbl-empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
 .zone-footer{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border);background:var(--surface2);font-size:12px}
 .pwr-label{color:var(--text3)}
-.pwr-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text)}
+.pwr-val{font-family:'DM Mono',monospace;font-weight:600}
 .pwr-110{color:var(--c-socket)}
 .pwr-220{color:var(--c-high)}
 .legend-aside{width:var(--legend);flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;display:flex;flex-direction:column}
@@ -191,19 +186,19 @@ td select:focus{border-color:var(--accent)}
       <div class="legend-section">
         <div class="legend-section-title">插座</div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>常駐供電</div><div class="legend-desc">長期插著不拔。如電視、冰箱、音響。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用後拔除，或預留備用。如吹風機、吸塵器。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用或預留備用插座。如吹風機、吸塵器。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機。</div></div>
       </div>
       <div class="legend-section">
         <div class="legend-section-title">燈具</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接照明</div><div class="legend-desc">主要照明，直接照射空間。如吸頂燈、筒燈、軌道燈。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>間接照明</div><div class="legend-desc">透過反射營造氛圍。如燈帶、壁燈。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>重點照明</div><div class="legend-desc">強調特定區域或物件。如展示燈、閱讀燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接照明</div><div class="legend-desc">主要照明。如吸頂燈、筒燈、軌道燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>間接照明</div><div class="legend-desc">氛圍照明。如燈帶、壁燈。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>重點照明</div><div class="legend-desc">強調特定區域。如展示燈、閱讀燈。</div></div>
       </div>
       <div class="legend-section">
         <div class="legend-section-title">供電方式</div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>插座 110V / 220V</div><div class="legend-desc">一般電器插座迴路。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接配線 110V</div><div class="legend-desc">燈具走天花板或牆面配線，不需插座。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接配線 110V</div><div class="legend-desc">燈具走天花板或牆面配線。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE</div><div class="legend-desc">透過網路線供電。如 IP 攝影機、無線基地台。</div></div>
       </div>
     </div>
@@ -212,12 +207,12 @@ td select:focus{border-color:var(--accent)}
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
 const TYPES = [
-  {key:'resident', label:'常駐供電', group:'socket'},
-  {key:'flex',     label:'短暫使用', group:'socket'},
-  {key:'high',     label:'高功率家電', group:'socket'},
-  {key:'direct',   label:'直接照明', group:'light'},
-  {key:'indirect', label:'間接照明', group:'light'},
-  {key:'accent',   label:'重點照明', group:'light'},
+  {key:'resident', label:'常駐供電'},
+  {key:'flex',     label:'短暫使用'},
+  {key:'high',     label:'高功率家電'},
+  {key:'direct',   label:'直接照明'},
+  {key:'indirect', label:'間接照明'},
+  {key:'accent',   label:'重點照明'},
 ];
 const POWERS = [
   {key:'s110', label:'插座 110V'},
@@ -225,38 +220,70 @@ const POWERS = [
   {key:'wire', label:'直接配線 110V'},
   {key:'poe',  label:'PoE'},
 ];
-// Map type to default power
 const TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire'};
 
+// zones: [{id, name, open, locked, items:[{id, name, qty, power, type, watt, height, note}]}]
 let projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function setSyncStatus(state,text){var el=document.getElementById('sync-status');el.className='sync-badge sync-'+state;el.innerHTML='<span class="sync-dot"></span>'+text;}
 
+// ── API ──
 function jsonp(params){
   return new Promise(function(resolve,reject){
     var cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
     var merged=Object.assign({},params,{callback:cb});
     var parts=Object.keys(merged).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(merged[k]);});
-    var url=API_URL+'?'+parts.join('&');
     var script=document.createElement('script');
     var timer=setTimeout(function(){cleanup();reject(new Error('timeout'));},15000);
     function cleanup(){clearTimeout(timer);delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);}
     window[cb]=function(data){cleanup();resolve(data);};
     script.onerror=function(){cleanup();reject(new Error('error'));};
-    script.src=url;
+    script.src=API_URL+'?'+parts.join('&');
     document.head.appendChild(script);
   });
 }
+async function apiPost(body){
+  var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return res.json();
+}
 async function api(params,body){
-  if(body){
-    var p={action:body.action||'',project:body.project||''};
-    if(body.zones!==undefined) p.zones=typeof body.zones==='string'?body.zones:JSON.stringify(body.zones);
-    return await jsonp(p);
-  }
+  if(body) return await apiPost(body);
   return await jsonp(params);
 }
 
+// ── Flat row <-> zones conversion ──
+function rowsToZones(rows){
+  var zoneMap={}, zoneOrder=[];
+  rows.forEach(function(r){
+    if(!zoneMap[r.zone]){
+      zoneMap[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};
+      zoneOrder.push(r.zone);
+    }
+    zoneMap[r.zone].items.push({
+      id:nextId++,
+      name:r.name||'',
+      qty:parseInt(r.qty)||1,
+      power:r.power||'s110',
+      type:r.type||'resident',
+      watt:String(r.watt||''),
+      height:String(r.height||''),
+      note:String(r.note||''),
+    });
+  });
+  return zoneOrder.map(function(n){return zoneMap[n];});
+}
+function zonesToRows(){
+  var rows=[];
+  zones.forEach(function(z){
+    z.items.forEach(function(it){
+      rows.push({zone:z.name,name:it.name,qty:it.qty||1,power:it.power||'s110',type:it.type||'resident',watt:it.watt||'',height:it.height||'',note:it.note||''});
+    });
+  });
+  return rows;
+}
+
+// ── Project loading ──
 async function loadProjects(){
   setSyncStatus('busy','載入中…');
   try{
@@ -272,12 +299,8 @@ async function loadProject(name){
   setSyncStatus('busy','讀取中…');
   try{
     var data=await api({action:'get',project:name});
-    zones=data.zones||[];
-    // migrate old data: add power field if missing
-    zones.forEach(function(z){z.items.forEach(function(it){
-      if(!it.power) it.power=TYPE_POWER[it.type]||'s110';
-    });});
-    nextId=zones.length?Math.max.apply(null,zones.flatMap(function(z){return[z.id].concat(z.items.map(function(i){return i.id;}))}))+1:1;
+    nextId=1;
+    zones=rowsToZones(data.rows||[]);
     renderMain();
     setSyncStatus('ok','已同步');
   }catch(e){setSyncStatus('err','讀取失敗');}
@@ -285,8 +308,10 @@ async function loadProject(name){
 async function saveProject(){
   if(!currentProject)return;
   setSyncStatus('busy','儲存中…');
-  try{await api(null,{action:'set',project:currentProject,zones:zones});setSyncStatus('ok','已儲存');}
-  catch(e){setSyncStatus('err','儲存失敗');}
+  try{
+    await apiPost({action:'set',project:currentProject,rows:zonesToRows()});
+    setSyncStatus('ok','已儲存');
+  }catch(e){setSyncStatus('err','儲存失敗');}
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1200);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
@@ -296,20 +321,21 @@ async function addProject(){
   var name=inp.value.trim();
   if(!name){inp.focus();return;}
   if(projects.indexOf(name)>=0){alert('已有同名專案');return;}
-  projects.push(name);inp.value='';zones=[];currentProject=name;
+  projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
   renderSidebar();renderMain();await saveProject();
 }
 async function deleteProject(name){
   if(!confirm('確定要刪除專案「'+name+'」及所有資料？'))return;
   setSyncStatus('busy','刪除中…');
   try{
-    await api(null,{action:'delete',project:name});
+    await apiPost({action:'delete',project:name});
     projects=projects.filter(function(p){return p!==name;});
     if(currentProject===name){currentProject='';zones=[];document.getElementById('main-content').innerHTML='<div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>';}
     renderSidebar();setSyncStatus('ok','已刪除');
   }catch(e){setSyncStatus('err','刪除失敗');}
 }
 
+// ── Sidebar ──
 function renderSidebar(){
   var el=document.getElementById('proj-list');
   if(projects.length===0){el.innerHTML='<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>';return;}
@@ -322,7 +348,6 @@ function renderSidebar(){
   }).join('');
   initProjDrag();
 }
-
 function startRename(e,name){
   e.stopPropagation();
   var item=document.getElementById('proj_'+encodeURIComponent(name));if(!item)return;
@@ -337,8 +362,8 @@ function startRename(e,name){
     setSyncStatus('busy','更名中…');
     try{
       var data=await api({action:'get',project:name});
-      await api(null,{action:'set',project:newName,zones:data.zones||[]});
-      await api(null,{action:'delete',project:name});
+      await apiPost({action:'set',project:newName,rows:data.rows||[]});
+      await apiPost({action:'delete',project:name});
       projects[projects.indexOf(name)]=newName;
       if(currentProject===name){currentProject=newName;var t=document.querySelector('.proj-title');if(t)t.textContent=newName;}
       renderSidebar();setSyncStatus('ok','已更名');
@@ -347,7 +372,6 @@ function startRename(e,name){
   inp.addEventListener('blur',commit);
   inp.addEventListener('keydown',function(e){if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.removeEventListener('blur',commit);renderSidebar();}});
 }
-
 var projDragSrc=null;
 function initProjDrag(){
   document.querySelectorAll('.proj-item').forEach(function(el){
@@ -363,6 +387,7 @@ function initProjDrag(){
   });
 }
 
+// ── Main ──
 function renderMain(){
   var el=document.getElementById('main-content');
   el.innerHTML='<div class="proj-header"><div class="proj-title">'+esc(currentProject)+'</div></div>'
@@ -382,18 +407,19 @@ function renderSummary(){
   var total=zones.reduce(function(a,z){return a+z.items.length;},0);
   var socket=0,high=0,light=0,poe=0;
   zones.forEach(function(z){z.items.forEach(function(i){
-    if(i.type==='resident'||i.type==='flex') socket++;
+    var p=i.power||TYPE_POWER[i.type]||'s110';
+    if(p==='poe') poe++;
     else if(i.type==='high') high++;
     else if(i.type==='direct'||i.type==='indirect'||i.type==='accent') light++;
-    else if(i.type==='poe') poe++;
+    else socket++;
   });});
   document.getElementById('totalZones').textContent=zones.length;
   el.innerHTML='<div class="scard"><div class="lbl">空間數</div><div class="val">'+zones.length+'</div><div class="sub">個區域</div></div>'
     +'<div class="scard"><div class="lbl">設備總數</div><div class="val">'+total+'</div><div class="sub">項設備</div></div>'
-    +'<div class="scard c-socket"><div class="lbl">常駐／備用供電</div><div class="val">'+socket+'</div><div class="sub">插座類</div></div>'
-    +'<div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">'+high+'</div><div class="sub">獨立迴路</div></div>'
+    +'<div class="scard c-socket"><div class="lbl">常駐／備用</div><div class="val">'+socket+'</div><div class="sub">插座類</div></div>'
+    +'<div class="scard c-high"><div class="lbl">高功率</div><div class="val">'+high+'</div><div class="sub">獨立迴路</div></div>'
     +'<div class="scard c-light"><div class="lbl">燈具</div><div class="val">'+light+'</div><div class="sub">各類照明</div></div>'
-    +'<div class="scard c-poe"><div class="lbl">PoE 供電</div><div class="val">'+poe+'</div><div class="sub">網路線供電</div></div>';
+    +'<div class="scard c-poe"><div class="lbl">PoE</div><div class="val">'+poe+'</div><div class="sub">網路線供電</div></div>';
 }
 
 function icon(name,size){
@@ -419,7 +445,7 @@ function renderZones(){
         +'<td style="width:55px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:45px;text-align:center"></td>'
         +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+powerOpts+'</select></td>'
         +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
-        +'<td style="width:85px"><div class="watt-wrap"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:65px"><span class="watt-unit">W</span></div></td>'
+        +'<td style="width:85px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:75px"></td>'
         +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder=""></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder=""></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+z.id+','+it.id+')">'+icon('trash',13)+'</button></td>'
@@ -428,10 +454,9 @@ function renderZones(){
     // Power totals
     var w110=0,w220=0;
     z.items.forEach(function(it){
-      if(it.type==='flex'||it.type==='poe')return;
+      if(it.type==='flex'||it.power==='poe')return;
       var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-      var pw=it.power||TYPE_POWER[it.type]||'s110';
-      if(pw==='s220')w220+=w;else w110+=w;
+      if(it.power==='s220')w220+=w;else w110+=w;
     });
     var a110=w110?(w110/110).toFixed(1):null;
     var a220=w220?(w220/220).toFixed(1):null;
@@ -457,7 +482,7 @@ function renderZones(){
       +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
       +'</div>'
       +'<div class="zone-body" '+bodyStyle+'>'
-      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>供電方式</th><th>類型</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
+      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>供電方式</th><th>類型</th><th>耗電量 / W</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
       +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody></table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml+'</div>';
@@ -472,10 +497,9 @@ function updateZoneFooter(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
   var w110=0,w220=0;
   z.items.forEach(function(it){
-    if(it.type==='flex'||it.type==='poe')return;
+    if(it.type==='flex'||it.power==='poe')return;
     var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-    var pw=it.power||TYPE_POWER[it.type]||'s110';
-    if(pw==='s220')w220+=w;else w110+=w;
+    if(it.power==='s220')w220+=w;else w110+=w;
   });
   var a110=w110?(w110/110).toFixed(1):null;
   var a220=w220?(w220/220).toFixed(1):null;
@@ -507,7 +531,7 @@ function addItem(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
   z.items.push({id:nextId++,name:'',qty:1,watt:'',power:'s110',type:'resident',height:'',note:''});
   z.open=true;renderZones();scheduleSave();
-  setTimeout(function(){var rows=document.querySelectorAll('#zone_'+zid+' tbody tr');var last=rows[rows.length-1];if(last){var inp=last.querySelector('input');if(inp)inp.focus();}},50);
+  setTimeout(function(){var rows=document.querySelectorAll('#zone_'+zid+' tbody tr');var last=rows[rows.length-1];if(last){var inp=last.querySelector('input[placeholder="設備名稱"]');if(inp)inp.focus();}},50);
 }
 function delItem(zid,iid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
@@ -563,7 +587,6 @@ function initRowDrag(){
     });
   });
 }
-
 function initDrag(){
   document.querySelectorAll('.zone').forEach(function(el){
     var handle=el.querySelector('.drag-handle');if(!handle)return;
@@ -597,11 +620,11 @@ function initDrag(){
 
 function exportCSV(){
   var BOM='\uFEFF';
-  var rows=[['專案','空間','編號','設備名稱','數量','類型','供電方式','耗電量(W)','插座／設備高度','備註']];
+  var rows=[['專案','空間','編號','設備名稱','數量','供電方式','類型','耗電量(W)','插座／設備高度','備註']];
   zones.forEach(function(z){z.items.forEach(function(it,i){
     var t=TYPES.find(function(x){return x.key===it.type;})||TYPES[0];
     var pw=POWERS.find(function(x){return x.key===(it.power||TYPE_POWER[it.type]||'s110');})||POWERS[0];
-    rows.push([currentProject,z.name,i+1,it.name,it.qty||1,t.label,pw.label,it.watt||'',it.height,it.note]);
+    rows.push([currentProject,z.name,i+1,it.name,it.qty||1,pw.label,t.label,it.watt||'',it.height,it.note]);
   });});
   var csv=BOM+rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
   var a=document.createElement('a');
