@@ -32,12 +32,12 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .btn:hover{border-color:var(--border2);background:var(--surface2);color:var(--text)}
 .btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-primary:hover{background:var(--accent-text);border-color:var(--accent-text);color:#fff}
+.btn-primary:hover{background:var(--accent-text);color:#fff}
 .btn-sm{height:28px;font-size:12px;padding:0 10px}
 .btn-block{width:100%;justify-content:center}
 .layout{display:flex;flex:1;min-height:0}
 aside{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
-.sidebar-head{padding:16px 16px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-head{padding:16px 16px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border)}
 .proj-list{flex:1;overflow-y:auto;padding:8px 0}
 .proj-item{display:flex;align-items:center;gap:6px;padding:8px 14px;cursor:pointer;transition:background .12s;font-size:13px;color:var(--text2);position:relative;user-select:none}
 .proj-item:hover{background:var(--surface2);color:var(--text)}
@@ -47,10 +47,6 @@ aside{width:var(--sidebar);flex-shrink:0;background:var(--surface);border-right:
 .proj-item:hover .proj-del{opacity:1}
 .proj-del:hover{background:var(--red-light);color:var(--red)}
 .proj-del svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
-.proj-rename-input{flex:1;font-family:'Noto Sans TC',sans-serif;font-size:13px;border:none;background:transparent;color:var(--accent-text);outline:1px solid var(--accent);border-radius:3px;padding:0 4px;min-width:0}
-.proj-drag{display:flex;align-items:center;width:14px;flex-shrink:0;color:var(--text3);cursor:grab}
-.proj-item.proj-dragging{opacity:.35}
-.proj-item.proj-drag-over{outline:2px dashed var(--accent);outline-offset:-2px;border-radius:4px}
 .sidebar-add{padding:12px;border-top:1px solid var(--border)}
 .sidebar-add input{width:100%;font-family:'Noto Sans TC',sans-serif;font-size:12px;height:30px;padding:0 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none;margin-bottom:6px}
 .sidebar-add input:focus{border-color:var(--accent)}
@@ -64,12 +60,12 @@ main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .sync-busy .sync-dot{animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.proj-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
-.proj-title{font-size:20px;font-weight:700;color:var(--text)}
+.proj-header{margin-bottom:20px}
+.proj-title{font-size:20px;font-weight:700}
 .summary{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px}
 .scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
-.scard .lbl{font-size:11px;color:var(--text3);margin-bottom:4px;letter-spacing:.05em}
-.scard .val{font-size:24px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);line-height:1}
+.scard .lbl{font-size:11px;color:var(--text3);margin-bottom:4px}
+.scard .val{font-size:24px;font-weight:700;font-family:'DM Mono',monospace;line-height:1}
 .scard .sub{font-size:11px;color:var(--text3);margin-top:3px}
 .scard.c-socket{border-top:3px solid var(--c-socket)}
 .scard.c-high{border-top:3px solid var(--c-high)}
@@ -77,22 +73,19 @@ main{flex:1;min-width:0;padding:28px 28px 80px;overflow-y:auto}
 .scard.c-poe{border-top:3px solid var(--c-poe)}
 .add-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
 .add-bar select,.add-bar input[type=text]{font-family:'Noto Sans TC',sans-serif;font-size:13px;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none}
-.add-bar select:focus,.add-bar input:focus{border-color:var(--accent)}
 .add-bar select{min-width:120px}
 .add-bar input[type=text]{width:140px}
 .sep{flex:1}
-.zone{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);animation:fadeIn .18s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.zone{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
 .zone-head{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--border);background:var(--surface)}
 .zone-head:hover{background:var(--surface2)}
-.zone-name{font-size:14px;font-weight:700;color:var(--text)}
+.zone-name{font-size:14px;font-weight:700}
 .zone-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--surface2);padding:2px 7px;border-radius:20px;border:1px solid var(--border)}
 .zone-spacer{flex:1}
 .zone-chevron{color:var(--text3);transition:transform .2s}
 .zone-chevron.open{transform:rotate(180deg)}
 .drag-handle{display:flex;align-items:center;width:18px;flex-shrink:0;color:var(--text3);cursor:grab;user-select:none}
 .row-drag-handle{cursor:grab;color:var(--text3);user-select:none;text-align:center}
-.row-drag-handle:hover{color:var(--text)}
 tbody tr.type-resident td,tbody tr.type-flex td{background:var(--c-socket-bg)}
 tbody tr.type-high td{background:var(--c-high-bg)}
 tbody tr.type-direct td,tbody tr.type-indirect td,tbody tr.type-accent td{background:var(--c-light-bg)}
@@ -109,17 +102,15 @@ td input[type=text],td input[type=number]{font-family:'Noto Sans TC',sans-serif;
 td input::placeholder{color:var(--text3)}
 td input:focus{background:var(--surface2);border-radius:4px;padding:2px 6px;margin:-2px -6px;width:calc(100% + 12px)}
 td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);padding:3px 8px;height:26px;cursor:pointer;outline:none}
-td select:focus{border-color:var(--accent)}
 .num-col{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);width:32px}
 .del-btn{width:26px;height:26px;border:none;background:transparent;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all .15s}
 .del-btn:hover{background:var(--red-light);color:var(--red)}
-.del-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.del-btn svg,.del-zone svg,.lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .del-zone{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
 .del-zone:hover{background:var(--red-light);color:var(--red);border-color:var(--red-light)}
 .del-zone.locked{opacity:.3;cursor:not-allowed;pointer-events:none}
-.del-zone svg,.lock-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .lock-btn{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
-.lock-btn:hover{background:var(--surface2);color:var(--text)}
+.lock-btn:hover{background:var(--surface2)}
 .lock-btn.active{background:#FEF3DC;color:#8A5C0A;border-color:#FEF3DC}
 .add-item-row{padding:9px 12px;border-top:1px solid var(--border);background:var(--surface2)}
 .tbl-empty{text-align:center;padding:28px;color:var(--text3);font-size:13px}
@@ -129,7 +120,7 @@ td select:focus{border-color:var(--accent)}
 .pwr-110{color:var(--c-socket)}
 .pwr-220{color:var(--c-high)}
 .legend-aside{width:var(--legend);flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;display:flex;flex-direction:column}
-.legend-head{padding:16px 14px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border);flex-shrink:0}
+.legend-head{padding:16px 14px 10px;font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;border-bottom:1px solid var(--border)}
 .legend-body{padding:12px 0;flex:1;overflow-y:auto}
 .legend-section{padding:6px 14px 10px;border-bottom:1px solid var(--border)}
 .legend-section:last-child{border-bottom:none}
@@ -155,15 +146,9 @@ td select:focus{border-color:var(--accent)}
   </div>
   <div class="header-right">
     <span id="sync-status" class="sync-badge sync-busy"><span class="sync-dot"></span>連線中…</span>
-    <button class="btn" onclick="loadProject(currentProject)">
-      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>重新整理
-    </button>
-    <button class="btn" onclick="exportCSV()">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>匯出 CSV
-    </button>
-    <button class="btn" onclick="window.print()">
-      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>列印
-    </button>
+    <button class="btn" onclick="loadProject(currentProject)"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>重新整理</button>
+    <button class="btn" onclick="exportCSV()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>匯出 CSV</button>
+    <button class="btn" onclick="window.print()"><svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>列印</button>
   </div>
 </header>
 <div class="layout">
@@ -172,9 +157,7 @@ td select:focus{border-color:var(--accent)}
     <div class="proj-list" id="proj-list"></div>
     <div class="sidebar-add">
       <input type="text" id="new-proj-input" placeholder="新專案名稱…" maxlength="40">
-      <button class="btn btn-primary btn-block btn-sm" onclick="addProject()">
-        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增專案
-      </button>
+      <button class="btn btn-primary btn-block btn-sm" onclick="addProject()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增專案</button>
     </div>
   </aside>
   <main id="main-content">
@@ -186,7 +169,7 @@ td select:focus{border-color:var(--accent)}
       <div class="legend-section">
         <div class="legend-section-title">插座</div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>常駐供電</div><div class="legend-desc">長期插著不拔。如電視、冰箱、音響。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用或預留備用插座。如吹風機、吸塵器。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用或預留備用插座。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機。</div></div>
       </div>
       <div class="legend-section">
@@ -205,233 +188,144 @@ td select:focus{border-color:var(--accent)}
   </aside>
 </div>
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
-const TYPES = [
-  {key:'resident', label:'常駐供電'},
-  {key:'flex',     label:'短暫使用'},
-  {key:'high',     label:'高功率家電'},
-  {key:'direct',   label:'直接照明'},
-  {key:'indirect', label:'間接照明'},
-  {key:'accent',   label:'重點照明'},
-];
-const POWERS = [
-  {key:'s110', label:'插座 110V'},
-  {key:'s220', label:'插座 220V'},
-  {key:'wire', label:'直接配線 110V'},
-  {key:'poe',  label:'PoE'},
-];
-const TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire'};
+var SUPABASE_URL = 'https://xuzsmbigavwsipqnpphi.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1enNtYmlnYXZ3c2lwcW5wcGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNDM4MTYsImV4cCI6MjA5NjcxOTgxNn0.JpLSAwhqWh2yLruURALn1_5BX9mBKRFDNKdYj93Y8Ws';
+var DB = SUPABASE_URL + '/rest/v1';
+var HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
 
-// zones: [{id, name, open, locked, items:[{id, name, qty, power, type, watt, height, note}]}]
-let projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
+var TYPES = [
+  {key:'resident',label:'常駐供電'},
+  {key:'flex',label:'短暫使用'},
+  {key:'high',label:'高功率家電'},
+  {key:'direct',label:'直接照明'},
+  {key:'indirect',label:'間接照明'},
+  {key:'accent',label:'重點照明'},
+];
+var POWERS = [
+  {key:'s110',label:'插座 110V'},
+  {key:'s220',label:'插座 220V'},
+  {key:'wire',label:'直接配線 110V'},
+  {key:'poe',label:'PoE'},
+];
+var TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire'};
+
+var projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function setSyncStatus(state,text){var el=document.getElementById('sync-status');el.className='sync-badge sync-'+state;el.innerHTML='<span class="sync-dot"></span>'+text;}
 
-// ── API ──
-function jsonp(params){
-  return new Promise(function(resolve,reject){
-    var cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
-    var merged=Object.assign({},params,{callback:cb});
-    var parts=Object.keys(merged).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(merged[k]);});
-    var script=document.createElement('script');
-    var timer=setTimeout(function(){cleanup();reject(new Error('timeout'));},15000);
-    function cleanup(){clearTimeout(timer);delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);}
-    window[cb]=function(data){cleanup();resolve(data);};
-    script.onerror=function(){cleanup();reject(new Error('error'));};
-    script.src=API_URL+'?'+parts.join('&');
-    document.head.appendChild(script);
-  });
+// ── Supabase API ──
+function dbGet(table, params){
+  var qs = params ? '?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&') : '';
+  return fetch(DB+'/'+table+qs, {headers: Object.assign({}, HEADERS, {'Prefer':'return=representation'})}).then(function(r){return r.json();});
 }
-// Write via iframe form POST to bypass CORS
-function iframePost(body){
-  return new Promise(function(resolve){
-    var id='frm_'+Date.now();
-    var cb='cb_'+Date.now();
-    var iframe=document.createElement('iframe');
-    iframe.name=id;iframe.style.display='none';
-    var form=document.createElement('form');
-    form.method='POST';form.action=API_URL;form.target=id;
-    var inp=document.createElement('input');
-    inp.type='hidden';inp.name='payload';inp.value=JSON.stringify(body);
-    form.appendChild(inp);
-    document.body.appendChild(iframe);document.body.appendChild(form);
-    iframe.onload=function(){
-      setTimeout(function(){
-        iframe.remove();form.remove();
-        resolve({ok:true});
-      },100);
-    };
-    form.submit();
-    // resolve after timeout if no onload
-    setTimeout(function(){iframe.remove();form.remove();resolve({ok:true});},3000);
-  });
+function dbPost(table, body){
+  return fetch(DB+'/'+table, {method:'POST', headers: Object.assign({}, HEADERS, {'Prefer':'return=representation'}), body: JSON.stringify(body)}).then(function(r){return r.json();});
 }
-async function api(params,body){
-  if(body) return await iframePost(body);
-  return await jsonp(params);
+function dbDelete(table, params){
+  var qs = '?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&');
+  return fetch(DB+'/'+table+qs, {method:'DELETE', headers: HEADERS}).then(function(r){return r.ok ? [] : r.json();});
 }
 
-// ── Flat row <-> zones conversion ──
-function rowsToZones(rows){
-  var zoneMap={}, zoneOrder=[];
-  rows.forEach(function(r){
-    if(!zoneMap[r.zone]){
-      zoneMap[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};
-      zoneOrder.push(r.zone);
-    }
-    zoneMap[r.zone].items.push({
-      id:nextId++,
-      name:r.name||'',
-      qty:parseInt(r.qty)||1,
-      power:r.power||'s110',
-      type:r.type||'resident',
-      watt:String(r.watt||''),
-      height:String(r.height||''),
-      note:String(r.note||''),
-    });
-  });
-  return zoneOrder.map(function(n){return zoneMap[n];});
-}
-function zonesToRows(){
-  var rows=[];
-  zones.forEach(function(z){
-    z.items.forEach(function(it){
-      rows.push({zone:z.name,name:it.name,qty:it.qty||1,power:it.power||'s110',type:it.type||'resident',watt:it.watt||'',height:it.height||'',note:it.note||''});
-    });
-  });
-  return rows;
-}
-
-// ── Project loading ──
-async function loadProjects(){
+// ── Projects = distinct project names in items table ──
+function loadProjects(){
   setSyncStatus('busy','載入中…');
-  try{
-    var data=await api({action:'list'});
-    projects=data.projects||[];
+  dbGet('items', {'select':'project', 'order':'project'}).then(function(rows){
+    var seen = {}, list = [];
+    (rows||[]).forEach(function(r){if(r.project && !seen[r.project]){seen[r.project]=1;list.push(r.project);}});
+    projects = list;
     renderSidebar();
     if(projects.length>0) switchProject(projects[0]);
     else setSyncStatus('ok','已連線');
-  }catch(e){setSyncStatus('err','連線失敗');}
+  }).catch(function(e){console.error(e);setSyncStatus('err','連線失敗');});
 }
-async function loadProject(name){
+
+function loadProject(name){
   if(!name)return;
   setSyncStatus('busy','讀取中…');
-  try{
-    var data=await api({action:'get',project:name});
-    nextId=1;
-    zones=rowsToZones(data.rows||[]);
-    renderMain();
-    setSyncStatus('ok','已同步');
-  }catch(e){setSyncStatus('err','讀取失敗');}
+  dbGet('items', {'select':'*','project':'eq.'+name,'order':'sort_order'}).then(function(rows){
+    nextId=1; zones=rowsToZones(rows||[]);
+    renderMain(); setSyncStatus('ok','已同步');
+  }).catch(function(){setSyncStatus('err','讀取失敗');});
 }
-async function saveProject(){
+
+function saveProject(){
   if(!currentProject)return;
   setSyncStatus('busy','儲存中…');
-  try{
-    await apiPost({action:'set',project:currentProject,rows:zonesToRows()});
-    setSyncStatus('ok','已儲存');
-  }catch(e){setSyncStatus('err','儲存失敗');}
+  // Delete all rows for this project, then re-insert
+  dbDelete('items', {'project':'eq.'+currentProject}).then(function(){
+    var rows = zonesToRows();
+    if(rows.length===0){setSyncStatus('ok','已儲存');return;}
+    return dbPost('items', rows);
+  }).then(function(){setSyncStatus('ok','已儲存');}).catch(function(){setSyncStatus('err','儲存失敗');});
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1200);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
 
-async function addProject(){
+function addProject(){
   var inp=document.getElementById('new-proj-input');
   var name=inp.value.trim();
   if(!name){inp.focus();return;}
   if(projects.indexOf(name)>=0){alert('已有同名專案');return;}
   projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
-  renderSidebar();renderMain();await saveProject();
+  renderSidebar();renderMain();saveProject();
 }
-async function deleteProject(name){
-  if(!confirm('確定要刪除專案「'+name+'」及所有資料？'))return;
+function deleteProject(name){
+  if(!confirm('確定要刪除專案「'+name+'」？'))return;
   setSyncStatus('busy','刪除中…');
-  try{
-    await apiPost({action:'delete',project:name});
+  dbDelete('items',{'project':'eq.'+name}).then(function(){
     projects=projects.filter(function(p){return p!==name;});
     if(currentProject===name){currentProject='';zones=[];document.getElementById('main-content').innerHTML='<div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>';}
     renderSidebar();setSyncStatus('ok','已刪除');
-  }catch(e){setSyncStatus('err','刪除失敗');}
+  }).catch(function(){setSyncStatus('err','刪除失敗');});
 }
 
-// ── Sidebar ──
+function rowsToZones(rows){
+  var map={},order=[];
+  rows.forEach(function(r){
+    if(!map[r.zone]){map[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};order.push(r.zone);}
+    map[r.zone].items.push({id:nextId++,name:r.name||'',qty:parseInt(r.qty)||1,power:r.power||'s110',type:r.type||'resident',watt:String(r.watt||''),height:String(r.height||''),note:String(r.note||'')});
+  });
+  return order.map(function(n){return map[n];});
+}
+function zonesToRows(){
+  var rows=[], order=0;
+  zones.forEach(function(z){z.items.forEach(function(it){
+    rows.push({project:currentProject,zone:z.name,sort_order:order++,name:it.name,qty:it.qty||1,power:it.power||'s110',type:it.type||'resident',watt:it.watt||'',height:it.height||'',note:it.note||''});
+  });});
+  return rows;
+}
+
 function renderSidebar(){
   var el=document.getElementById('proj-list');
   if(projects.length===0){el.innerHTML='<div style="padding:20px 14px;font-size:12px;color:var(--text3)">尚無專案，請新增</div>';return;}
   el.innerHTML=projects.map(function(p){
-    return '<div class="proj-item'+(p===currentProject?' active':'')+'" id="proj_'+encodeURIComponent(p)+'" draggable="true" onclick="switchProject(\''+esc(p)+'\')" ondblclick="startRename(event,\''+esc(p)+'\')">'
-      +'<span class="proj-drag" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></span>'
-      +'<span class="proj-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p)+'</span>'
+    return '<div class="proj-item'+(p===currentProject?' active':'')+'" onclick="switchProject(\''+esc(p)+'\')">'
+      +'<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p)+'</span>'
       +'<button class="proj-del" onclick="event.stopPropagation();deleteProject(\''+esc(p)+'\')" title="刪除"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>'
       +'</div>';
   }).join('');
-  initProjDrag();
-}
-function startRename(e,name){
-  e.stopPropagation();
-  var item=document.getElementById('proj_'+encodeURIComponent(name));if(!item)return;
-  var label=item.querySelector('.proj-label');
-  var inp=document.createElement('input');inp.className='proj-rename-input';inp.value=name;
-  inp.onclick=function(e){e.stopPropagation();};
-  label.replaceWith(inp);inp.focus();inp.select();
-  async function commit(){
-    var newName=inp.value.trim();
-    if(!newName||newName===name){renderSidebar();return;}
-    if(projects.indexOf(newName)>=0){alert('已有同名專案');renderSidebar();return;}
-    setSyncStatus('busy','更名中…');
-    try{
-      var data=await api({action:'get',project:name});
-      await apiPost({action:'set',project:newName,rows:data.rows||[]});
-      await apiPost({action:'delete',project:name});
-      projects[projects.indexOf(name)]=newName;
-      if(currentProject===name){currentProject=newName;var t=document.querySelector('.proj-title');if(t)t.textContent=newName;}
-      renderSidebar();setSyncStatus('ok','已更名');
-    }catch(err){setSyncStatus('err','更名失敗');renderSidebar();}
-  }
-  inp.addEventListener('blur',commit);
-  inp.addEventListener('keydown',function(e){if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.removeEventListener('blur',commit);renderSidebar();}});
-}
-var projDragSrc=null;
-function initProjDrag(){
-  document.querySelectorAll('.proj-item').forEach(function(el){
-    el.addEventListener('dragstart',function(e){projDragSrc=el.id.replace('proj_','');el.classList.add('proj-dragging');e.dataTransfer.effectAllowed='move';});
-    el.addEventListener('dragend',function(){el.classList.remove('proj-dragging');document.querySelectorAll('.proj-item').forEach(function(x){x.classList.remove('proj-drag-over');});});
-    el.addEventListener('dragover',function(e){e.preventDefault();document.querySelectorAll('.proj-item').forEach(function(x){x.classList.remove('proj-drag-over');});var tid=el.id.replace('proj_','');if(tid!==projDragSrc)el.classList.add('proj-drag-over');});
-    el.addEventListener('dragleave',function(){el.classList.remove('proj-drag-over');});
-    el.addEventListener('drop',function(e){
-      e.preventDefault();var tid=el.id.replace('proj_','');if(tid===projDragSrc)return;
-      var si=projects.indexOf(decodeURIComponent(projDragSrc)),ti=projects.indexOf(decodeURIComponent(tid));
-      if(si<0||ti<0)return;var m=projects.splice(si,1)[0];projects.splice(ti,0,m);renderSidebar();
-    });
-  });
 }
 
-// ── Main ──
 function renderMain(){
   var el=document.getElementById('main-content');
   el.innerHTML='<div class="proj-header"><div class="proj-title">'+esc(currentProject)+'</div></div>'
     +'<div class="summary" id="summary"></div>'
-    +'<div class="add-bar">'
-    +'<select id="newZone"><option value="">選擇空間…</option><option>客廳</option><option>主臥</option><option>次臥</option><option>書房</option><option>廚房</option><option>餐廳</option><option>浴室</option><option>陽台</option><option>玄關</option><option>車庫</option><option>儲藏室</option><option>其他</option></select>'
+    +'<div class="add-bar"><select id="newZone"><option value="">選擇空間…</option><option>客廳</option><option>主臥</option><option>次臥</option><option>書房</option><option>廚房</option><option>餐廳</option><option>浴室</option><option>陽台</option><option>玄關</option><option>車庫</option><option>儲藏室</option><option>其他</option></select>'
     +'<input type="text" id="customZone" placeholder="或自訂空間名稱…">'
     +'<button class="btn btn-primary" onclick="addZone()"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增空間</button>'
-    +'<div class="sep"></div><span style="font-size:12px;color:var(--text3)">共 <span id="totalZones">0</span> 個空間</span>'
-    +'</div><div id="zones"></div>';
+    +'<div class="sep"></div><span style="font-size:12px;color:var(--text3)">共 <span id="totalZones">0</span> 個空間</span></div>'
+    +'<div id="zones"></div>';
   document.getElementById('customZone').addEventListener('keydown',function(e){if(e.key==='Enter')addZone();});
   renderZones();
 }
-
 function renderSummary(){
   var el=document.getElementById('summary');if(!el)return;
   var total=zones.reduce(function(a,z){return a+z.items.length;},0);
   var socket=0,high=0,light=0,poe=0;
   zones.forEach(function(z){z.items.forEach(function(i){
     var p=i.power||TYPE_POWER[i.type]||'s110';
-    if(p==='poe') poe++;
-    else if(i.type==='high') high++;
-    else if(i.type==='direct'||i.type==='indirect'||i.type==='accent') light++;
-    else socket++;
+    if(p==='poe')poe++;else if(i.type==='high')high++;else if(i.type==='direct'||i.type==='indirect'||i.type==='accent')light++;else socket++;
   });});
   document.getElementById('totalZones').textContent=zones.length;
   el.innerHTML='<div class="scard"><div class="lbl">空間數</div><div class="val">'+zones.length+'</div><div class="sub">個區域</div></div>'
@@ -441,135 +335,98 @@ function renderSummary(){
     +'<div class="scard c-light"><div class="lbl">燈具</div><div class="val">'+light+'</div><div class="sub">各類照明</div></div>'
     +'<div class="scard c-poe"><div class="lbl">PoE</div><div class="val">'+poe+'</div><div class="sub">網路線供電</div></div>';
 }
-
 function icon(name,size){
   size=size||14;
   var p={plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/>',chevron:'<polyline points="6 9 12 15 18 9"/>'};
   return '<svg viewBox="0 0 24 24" style="width:'+size+'px;height:'+size+'px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">'+p[name]+'</svg>';
 }
-
 function renderZones(){
   renderSummary();
   var el=document.getElementById('zones');if(!el)return;
   el.innerHTML='';
   zones.forEach(function(z){
-    var div=document.createElement('div');
-    div.className='zone';div.id='zone_'+z.id;
+    var div=document.createElement('div');div.className='zone';div.id='zone_'+z.id;
     var rows=z.items.map(function(it,i){
-      var typeOpts=TYPES.map(function(t){return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';}).join('');
-      var powerOpts=POWERS.map(function(p){return '<option value="'+p.key+'"'+((it.power||TYPE_POWER[it.type]||'s110')===p.key?' selected':'')+'>'+p.label+'</option>';}).join('');
+      var tOpts=TYPES.map(function(t){return '<option value="'+t.key+'"'+(it.type===t.key?' selected':'')+'>'+t.label+'</option>';}).join('');
+      var pOpts=POWERS.map(function(p){return '<option value="'+p.key+'"'+((it.power||TYPE_POWER[it.type]||'s110')===p.key?' selected':'')+'>'+p.label+'</option>';}).join('');
       return '<tr id="row_'+it.id+'" class="type-'+it.type+'">'
         +'<td style="width:20px;padding:8px 4px" class="row-drag-handle"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor;stroke:none;display:block;margin:auto"><circle cx="9" cy="7" r="1.2"/><circle cx="15" cy="7" r="1.2"/><circle cx="9" cy="12" r="1.2"/><circle cx="15" cy="12" r="1.2"/><circle cx="9" cy="17" r="1.2"/><circle cx="15" cy="17" r="1.2"/></svg></td>'
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+z.id+','+it.id+',\'name\',this.value)" placeholder="設備名稱"></td>'
         +'<td style="width:55px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:45px;text-align:center"></td>'
-        +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+powerOpts+'</select></td>'
-        +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
+        +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+pOpts+'</select></td>'
+        +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+tOpts+'</select></td>'
         +'<td style="width:85px"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:75px"></td>'
-        +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder=""></td>'
-        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder=""></td>'
+        +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)"></td>'
+        +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)"></td>'
         +'<td style="width:34px"><button class="del-btn" onclick="delItem('+z.id+','+it.id+')">'+icon('trash',13)+'</button></td>'
         +'</tr>';
     }).join('');
-    // Power totals
     var w110=0,w220=0;
-    z.items.forEach(function(it){
-      if(it.type==='flex'||it.power==='poe')return;
-      var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-      if(it.power==='s220')w220+=w;else w110+=w;
-    });
-    var a110=w110?(w110/110).toFixed(1):null;
-    var a220=w220?(w220/220).toFixed(1):null;
+    z.items.forEach(function(it){if(it.type==='flex'||it.power==='poe')return;var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);if(it.power==='s220')w220+=w;else w110+=w;});
+    var a110=w110?(w110/110).toFixed(1):null,a220=w220?(w220/220).toFixed(1):null;
     var fi='';
     if(a110)fi+='<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
     if(a110&&a220)fi+='<span style="color:var(--border2)">｜</span>';
     if(a220)fi+='<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
-    var footerHtml=fi
-      ?'<div class="zone-footer" id="footer_'+z.id+'"><span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span></div>'
+    var fHtml=fi?'<div class="zone-footer" id="footer_'+z.id+'"><span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span></div>'
       :'<div class="zone-footer" id="footer_'+z.id+'" style="color:var(--text3)">尚無耗電量資料</div>';
-    var lockBtn=z.locked
+    var lBtn=z.locked
       ?'<button class="lock-btn active" onclick="event.stopPropagation();toggleLock('+z.id+')" title="解除鎖定"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 已鎖定</button>'
       :'<button class="lock-btn" onclick="event.stopPropagation();toggleLock('+z.id+')" title="鎖定防誤刪"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg> 鎖定</button>';
-    var bodyStyle=z.open?'':'style="display:none"';
     div.innerHTML=''
       +'<div class="zone-head" onclick="toggleZone('+z.id+')">'
       +'<span class="drag-handle" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none"><circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/></svg></span>'
-      +'<span class="zone-name">'+esc(z.name)+'</span>'
-      +'<span class="zone-count">'+z.items.length+' 項</span>'
-      +'<span class="zone-spacer"></span>'
-      +lockBtn
+      +'<span class="zone-name">'+esc(z.name)+'</span><span class="zone-count">'+z.items.length+' 項</span>'
+      +'<span class="zone-spacer"></span>'+lBtn
       +'<button class="del-zone'+(z.locked?' locked':'')+'" onclick="event.stopPropagation();delZone('+z.id+')">'+icon('trash',12)+' 刪除空間</button>'
-      +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
-      +'</div>'
-      +'<div class="zone-body" '+bodyStyle+'>'
+      +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span></div>'
+      +'<div class="zone-body"'+(z.open?'':' style="display:none"')+'>'
       +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>供電方式</th><th>類型</th><th>耗電量 / W</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
       +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody></table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
-      +footerHtml+'</div>';
+      +fHtml+'</div>';
     el.appendChild(div);
   });
-  window._zones=zones;
-  initDrag();
-  initRowDrag();
+  window._zones=zones;initDrag();initRowDrag();
 }
-
 function updateZoneFooter(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
   var w110=0,w220=0;
-  z.items.forEach(function(it){
-    if(it.type==='flex'||it.power==='poe')return;
-    var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);
-    if(it.power==='s220')w220+=w;else w110+=w;
-  });
-  var a110=w110?(w110/110).toFixed(1):null;
-  var a220=w220?(w220/220).toFixed(1):null;
+  z.items.forEach(function(it){if(it.type==='flex'||it.power==='poe')return;var w=(parseFloat(it.watt)||0)*(parseInt(it.qty)||1);if(it.power==='s220')w220+=w;else w110+=w;});
+  var a110=w110?(w110/110).toFixed(1):null,a220=w220?(w220/220).toFixed(1):null;
   var fe=document.getElementById('footer_'+zid);if(!fe)return;
   var fi='';
   if(a110)fi+='<span class="pwr-label">110V：</span><span class="pwr-val pwr-110">'+w110+'W／'+a110+'A</span>';
   if(a110&&a220)fi+='<span style="color:var(--border2)">｜</span>';
   if(a220)fi+='<span class="pwr-label">220V：</span><span class="pwr-val pwr-220">'+w220+'W／'+a220+'A</span>';
-  fe.innerHTML=fi
-    ?'<span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>'
-    :'<span style="color:var(--text3)">尚無耗電量資料</span>';
+  fe.innerHTML=fi?'<span class="pwr-label">預估用電：</span>'+fi+'<span class="pwr-label" style="margin-left:auto;font-size:11px">（不含短暫使用）</span>':'<span style="color:var(--text3)">尚無耗電量資料</span>';
 }
-
 function toggleLock(id){var z=zones.find(function(x){return x.id===id;});if(!z)return;z.locked=!z.locked;renderZones();scheduleSave();}
 function toggleZone(id){var z=zones.find(function(x){return x.id===id;});if(z){z.open=!z.open;renderZones();}}
-
 function addZone(){
   var sel=document.getElementById('newZone'),cust=document.getElementById('customZone');
-  var name=(cust.value.trim()||sel.value).trim();
-  if(!name){cust.focus();return;}
+  var name=(cust.value.trim()||sel.value).trim();if(!name){cust.focus();return;}
   zones.push({id:nextId++,name:name,open:true,locked:false,items:[]});
   sel.value='';cust.value='';renderZones();scheduleSave();
 }
-function delZone(id){
-  if(!confirm('確定要刪除這個空間及其所有設備？'))return;
-  zones=zones.filter(function(z){return z.id!==id;});renderZones();scheduleSave();
-}
+function delZone(id){if(!confirm('確定要刪除這個空間及其所有設備？'))return;zones=zones.filter(function(z){return z.id!==id;});renderZones();scheduleSave();}
 function addItem(zid){
   var z=zones.find(function(x){return x.id===zid;});if(!z)return;
   z.items.push({id:nextId++,name:'',qty:1,watt:'',power:'s110',type:'resident',height:'',note:''});
   z.open=true;renderZones();scheduleSave();
   setTimeout(function(){var rows=document.querySelectorAll('#zone_'+zid+' tbody tr');var last=rows[rows.length-1];if(last){var inp=last.querySelector('input[placeholder="設備名稱"]');if(inp)inp.focus();}},50);
 }
-function delItem(zid,iid){
-  var z=zones.find(function(x){return x.id===zid;});if(!z)return;
-  z.items=z.items.filter(function(i){return i.id!==iid;});renderZones();scheduleSave();
-}
+function delItem(zid,iid){var z=zones.find(function(x){return x.id===zid;});if(!z)return;z.items=z.items.filter(function(i){return i.id!==iid;});renderZones();scheduleSave();}
 function upd(zid,iid,field,val){
   var z=zones.find(function(x){return x.id===zid;});
-  if(!z) z=zones.find(function(x){return x.items.some(function(i){return i.id===iid;});});
+  if(!z)z=zones.find(function(x){return x.items.some(function(i){return i.id===iid;});});
   if(!z)return;
-  var it=z.items.find(function(i){return i.id===iid;});
-  if(it) it[field]=val;
+  var it=z.items.find(function(i){return i.id===iid;});if(it)it[field]=val;
   renderSummary();
-  var cnt=document.querySelector('#zone_'+z.id+' .zone-count');
-  if(cnt)cnt.textContent=z.items.length+' 項';
-  updateZoneFooter(z.id);
-  scheduleSave();
+  var cnt=document.querySelector('#zone_'+z.id+' .zone-count');if(cnt)cnt.textContent=z.items.length+' 項';
+  updateZoneFooter(z.id);scheduleSave();
 }
-
 function initRowDrag(){
   document.querySelectorAll('.zone').forEach(function(zoneEl){
     var zid=parseInt(zoneEl.id.replace('zone_',''));
@@ -577,30 +434,19 @@ function initRowDrag(){
     tbody.querySelectorAll('.row-drag-handle').forEach(function(handle){
       handle.addEventListener('mousedown',function(e){
         e.preventDefault();e.stopPropagation();
-        var row=handle.closest('tr'),iid=parseInt(row.id.replace('row_',''));
-        var rect=row.getBoundingClientRect(),offsetY=e.clientY-rect.top;
-        var ghost=row.cloneNode(true);
-        ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.15);display:table;';
+        var row=handle.closest('tr');var rect=row.getBoundingClientRect(),offsetY=e.clientY-rect.top;
+        var ghost=row.cloneNode(true);ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;background:var(--surface);box-shadow:0 4px 12px rgba(0,0,0,.15);display:table;';
         document.body.appendChild(ghost);row.style.opacity='.3';
-        var ph=document.createElement('tr');
-        ph.innerHTML='<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
+        var ph=document.createElement('tr');ph.innerHTML='<td colspan="10" style="padding:0;height:'+rect.height+'px;background:var(--accent-light);border:2px dashed var(--accent)"></td>';
         tbody.insertBefore(ph,row);row.style.display='none';
-        function onMove(e){
-          ghost.style.top=(e.clientY-offsetY)+'px';
-          var rows=Array.from(tbody.querySelectorAll('tr[id^="row_"]')),ib=null;
-          for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=rows[i];break;}}
-          if(ib)tbody.insertBefore(ph,ib);else tbody.appendChild(ph);
-        }
+        function onMove(e){ghost.style.top=(e.clientY-offsetY)+'px';var rows=Array.from(tbody.querySelectorAll('tr[id^="row_"]')),ib=null;for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=rows[i];break;}}if(ib)tbody.insertBefore(ph,ib);else tbody.appendChild(ph);}
         function onUp(){
           document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
-          ghost.remove();row.style.opacity='';row.style.display='';
-          tbody.insertBefore(row,ph);ph.remove();
+          ghost.remove();row.style.opacity='';row.style.display='';tbody.insertBefore(row,ph);ph.remove();
           var z=zones.find(function(z){return z.id===zid;});if(!z)return;
           var newOrder=Array.from(tbody.querySelectorAll('tr[id^="row_"]')).map(function(r){return parseInt(r.id.replace('row_',''));});
           var reordered=[];newOrder.forEach(function(id){var it=z.items.find(function(i){return i.id===id;});if(it)reordered.push(it);});
-          z.items=reordered;
-          tbody.querySelectorAll('tr[id^="row_"]').forEach(function(r,idx){var nc=r.querySelector('.num-col');if(nc)nc.textContent=String(idx+1).padStart(2,'0');});
-          scheduleSave();
+          z.items=reordered;tbody.querySelectorAll('tr[id^="row_"]').forEach(function(r,idx){var nc=r.querySelector('.num-col');if(nc)nc.textContent=String(idx+1).padStart(2,'0');});scheduleSave();
         }
         document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
       });
@@ -613,22 +459,14 @@ function initDrag(){
     handle.addEventListener('mousedown',function(e){
       e.preventDefault();
       var container=document.getElementById('zones'),rect=el.getBoundingClientRect(),offsetY=e.clientY-rect.top;
-      var ghost=el.cloneNode(true);
-      ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.15);';
+      var ghost=el.cloneNode(true);ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;opacity:.5;pointer-events:none;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.15);';
       document.body.appendChild(ghost);el.style.opacity='.3';
-      var ph=document.createElement('div');
-      ph.style.cssText='height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
+      var ph=document.createElement('div');ph.style.cssText='height:'+rect.height+'px;border:2px dashed var(--accent);border-radius:var(--radius-lg);margin-bottom:12px;background:var(--accent-light);';
       el.parentNode.insertBefore(ph,el);el.style.display='none';
-      function onMove(e){
-        ghost.style.top=(e.clientY-offsetY)+'px';
-        var zlist=Array.from(container.querySelectorAll('.zone')),ib=null;
-        for(var i=0;i<zlist.length;i++){var r=zlist[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=zlist[i];break;}}
-        if(ib)container.insertBefore(ph,ib);else container.appendChild(ph);
-      }
+      function onMove(e){ghost.style.top=(e.clientY-offsetY)+'px';var zlist=Array.from(container.querySelectorAll('.zone')),ib=null;for(var i=0;i<zlist.length;i++){var r=zlist[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){ib=zlist[i];break;}}if(ib)container.insertBefore(ph,ib);else container.appendChild(ph);}
       function onUp(){
         document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
-        ghost.remove();el.style.opacity='';el.style.display='';
-        container.insertBefore(el,ph);ph.remove();
+        ghost.remove();el.style.opacity='';el.style.display='';container.insertBefore(el,ph);ph.remove();
         var newOrder=Array.from(container.querySelectorAll('.zone')).map(function(z){return parseInt(z.id.replace('zone_',''));});
         var reordered=[];newOrder.forEach(function(id){var z=window._zones.find(function(z){return z.id===id;});if(z)reordered.push(z);});
         zones=reordered;window._zones=reordered;scheduleSave();
@@ -637,7 +475,6 @@ function initDrag(){
     });
   });
 }
-
 function exportCSV(){
   var BOM='\uFEFF';
   var rows=[['專案','空間','編號','設備名稱','數量','供電方式','類型','耗電量(W)','插座／設備高度','備註']];
@@ -647,11 +484,8 @@ function exportCSV(){
     rows.push([currentProject,z.name,i+1,it.name,it.qty||1,pw.label,t.label,it.watt||'',it.height,it.note]);
   });});
   var csv=BOM+rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\r\n');
-  var a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download=currentProject+'_室內電源規劃表.csv';a.click();
+  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=currentProject+'_室內電源規劃表.csv';a.click();
 }
-
 document.getElementById('new-proj-input').addEventListener('keydown',function(e){if(e.key==='Enter')addProject();});
 loadProjects();
 </script>
