@@ -190,7 +190,7 @@ td select:focus{border-color:var(--accent)}
     <div class="legend-body">
       <div class="legend-section">
         <div class="legend-section-title">插座</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>常駐插座</div><div class="legend-desc">長期插著不拔。如電視、冰箱、音響。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>常駐供電</div><div class="legend-desc">長期插著不拔。如電視、冰箱、音響。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>短暫使用</div><div class="legend-desc">偶爾使用後拔除，或預留備用。如吹風機、吸塵器。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-high"></span>高功率家電</div><div class="legend-desc">需要獨立迴路。如冷氣、烤箱、洗衣機、電磁爐。</div></div>
       </div>
@@ -212,13 +212,12 @@ td select:focus{border-color:var(--accent)}
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
 const TYPES = [
-  {key:'resident', label:'常駐插座', group:'socket'},
+  {key:'resident', label:'常駐供電', group:'socket'},
   {key:'flex',     label:'短暫使用', group:'socket'},
   {key:'high',     label:'高功率家電', group:'socket'},
   {key:'direct',   label:'直接照明', group:'light'},
   {key:'indirect', label:'間接照明', group:'light'},
   {key:'accent',   label:'重點照明', group:'light'},
-  {key:'poe',      label:'PoE 供電', group:'poe'},
 ];
 const POWERS = [
   {key:'s110', label:'插座 110V'},
@@ -227,7 +226,7 @@ const POWERS = [
   {key:'poe',  label:'PoE'},
 ];
 // Map type to default power
-const TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire',poe:'poe'};
+const TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire'};
 
 let projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 
@@ -391,7 +390,7 @@ function renderSummary(){
   document.getElementById('totalZones').textContent=zones.length;
   el.innerHTML='<div class="scard"><div class="lbl">空間數</div><div class="val">'+zones.length+'</div><div class="sub">個區域</div></div>'
     +'<div class="scard"><div class="lbl">設備總數</div><div class="val">'+total+'</div><div class="sub">項設備</div></div>'
-    +'<div class="scard c-socket"><div class="lbl">常駐／備用插座</div><div class="val">'+socket+'</div><div class="sub">插座類</div></div>'
+    +'<div class="scard c-socket"><div class="lbl">常駐／備用供電</div><div class="val">'+socket+'</div><div class="sub">插座類</div></div>'
     +'<div class="scard c-high"><div class="lbl">高功率家電</div><div class="val">'+high+'</div><div class="sub">獨立迴路</div></div>'
     +'<div class="scard c-light"><div class="lbl">燈具</div><div class="val">'+light+'</div><div class="sub">各類照明</div></div>'
     +'<div class="scard c-poe"><div class="lbl">PoE 供電</div><div class="val">'+poe+'</div><div class="sub">網路線供電</div></div>';
@@ -418,8 +417,8 @@ function renderZones(){
         +'<td class="num-col">'+String(i+1).padStart(2,'0')+'</td>'
         +'<td><input type="text" value="'+esc(it.name)+'" oninput="upd('+z.id+','+it.id+',\'name\',this.value)" placeholder="設備名稱"></td>'
         +'<td style="width:55px"><input type="number" min="1" value="'+(it.qty||1)+'" oninput="upd('+z.id+','+it.id+',\'qty\',this.value)" style="width:45px;text-align:center"></td>'
-        +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
         +'<td style="width:135px"><select onchange="upd('+z.id+','+it.id+',\'power\',this.value)">'+powerOpts+'</select></td>'
+        +'<td style="width:120px"><select onchange="upd('+z.id+','+it.id+',\'type\',this.value);this.closest(\'tr\').className=\'type-\'+this.value">'+typeOpts+'</select></td>'
         +'<td style="width:85px"><div class="watt-wrap"><input type="number" min="0" value="'+(it.watt||'')+'" oninput="upd('+z.id+','+it.id+',\'watt\',this.value)" placeholder="-" style="width:65px"><span class="watt-unit">W</span></div></td>'
         +'<td style="width:110px"><input type="text" value="'+esc(it.height)+'" oninput="upd('+z.id+','+it.id+',\'height\',this.value)" placeholder=""></td>'
         +'<td><input type="text" value="'+esc(it.note)+'" oninput="upd('+z.id+','+it.id+',\'note\',this.value)" placeholder=""></td>'
@@ -458,7 +457,7 @@ function renderZones(){
       +'<span class="zone-chevron'+(z.open?' open':'')+'">'+icon('chevron')+'</span>'
       +'</div>'
       +'<div class="zone-body" '+bodyStyle+'>'
-      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>類型</th><th>供電方式</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
+      +'<table><thead><tr><th style="width:20px"></th><th>#</th><th>設備名稱</th><th>數量</th><th>供電方式</th><th>類型</th><th>耗電量</th><th>插座／設備高度</th><th>備註</th><th></th></tr></thead>'
       +'<tbody>'+(rows||'<tr><td colspan="10" class="tbl-empty">尚未新增設備</td></tr>')+'</tbody></table>'
       +'<div class="add-item-row"><button class="btn btn-sm" onclick="addItem('+z.id+')">'+icon('plus')+' 新增設備</button></div>'
       +footerHtml+'</div>';
