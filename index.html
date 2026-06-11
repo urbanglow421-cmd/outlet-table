@@ -188,10 +188,7 @@ td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid 
   </aside>
 </div>
 <script>
-var SUPABASE_URL = 'https://xuzsmbigavwsipqnpphi.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1enNtYmlnYXZ3c2lwcW5wcGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNDM4MTYsImV4cCI6MjA5NjcxOTgxNn0.JpLSAwhqWh2yLruURALn1_5BX9mBKRFDNKdYj93Y8Ws';
-var DB = SUPABASE_URL + '/rest/v1';
-var HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+var API_URL = 'https://script.google.com/macros/s/AKfycbzmGj-w1FQ9soxtjoNw5T8AYEpRi3zZ3O9j9flWbgZdiP0PDN0GoZh75_dnHIzC0eSa/exec';
 
 var TYPES = [
   {key:'resident',label:'常駐供電'},
@@ -214,50 +211,65 @@ var projects=[], currentProject='', zones=[], nextId=1, saveTimer=null;
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function setSyncStatus(state,text){var el=document.getElementById('sync-status');el.className='sync-badge sync-'+state;el.innerHTML='<span class="sync-dot"></span>'+text;}
 
-// ── Supabase API ──
-function dbGet(table, params){
-  var qs = params ? '?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&') : '';
-  return fetch(DB+'/'+table+qs, {headers: Object.assign({}, HEADERS, {'Prefer':'return=representation'})}).then(function(r){return r.json();});
-}
-function dbPost(table, body){
-  return fetch(DB+'/'+table, {method:'POST', headers: Object.assign({}, HEADERS, {'Prefer':'return=representation'}), body: JSON.stringify(body)}).then(function(r){return r.json();});
-}
-function dbDelete(table, params){
-  var qs = '?'+Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&');
-  return fetch(DB+'/'+table+qs, {method:'DELETE', headers: HEADERS}).then(function(r){return r.ok ? [] : r.json();});
+function jsonp(params){
+  return new Promise(function(resolve,reject){
+    var cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    var p=Object.assign({},params,{callback:cb});
+    var qs=Object.keys(p).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(p[k]);}).join('&');
+    var script=document.createElement('script');
+    var timer=setTimeout(function(){cleanup();reject(new Error('timeout'));},15000);
+    function cleanup(){clearTimeout(timer);delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);}
+    window[cb]=function(data){cleanup();resolve(data);};
+    script.onerror=function(){cleanup();reject(new Error('error'));};
+    script.src=API_URL+'?'+qs;
+    document.head.appendChild(script);
+  });
 }
 
-// ── Projects = distinct project names in items table ──
+function rowsToZones(rows){
+  var map={},order=[];
+  (rows||[]).forEach(function(r){
+    if(!map[r.zone]){map[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};order.push(r.zone);}
+    map[r.zone].items.push({id:nextId++,name:r.name||'',qty:parseInt(r.qty)||1,power:r.power||'s110',type:r.type||'resident',watt:String(r.watt||''),height:String(r.height||''),note:String(r.note||'')});
+  });
+  return order.map(function(n){return map[n];});
+}
+function zonesToRows(){
+  var rows=[],order=0;
+  zones.forEach(function(z){z.items.forEach(function(it){
+    rows.push({zone:z.name,name:it.name,qty:it.qty||1,power:it.power||'s110',type:it.type||'resident',watt:it.watt||'',height:it.height||'',note:it.note||''});
+  });});
+  return rows;
+}
+
 function loadProjects(){
   setSyncStatus('busy','載入中…');
-  dbGet('projects', {'select':'name','order':'created_at'}).then(function(rows){
-    projects = (rows||[]).map(function(r){return r.name;});
+  jsonp({action:'list'}).then(function(data){
+    projects=data.projects||[];
     renderSidebar();
     if(projects.length>0) switchProject(projects[0]);
     else setSyncStatus('ok','已連線');
-  }).catch(function(e){console.error(e);setSyncStatus('err','連線失敗');});
+  }).catch(function(){setSyncStatus('err','連線失敗');});
 }
-
 function loadProject(name){
   if(!name)return;
   setSyncStatus('busy','讀取中…');
-  dbGet('items', {'select':'*','project':'eq.'+name,'order':'sort_order'}).then(function(rows){
-    nextId=1; zones=rowsToZones(rows||[]);
-    renderMain(); setSyncStatus('ok','已同步');
+  jsonp({action:'get',project:name}).then(function(data){
+    nextId=1;zones=rowsToZones(data.rows||[]);
+    renderMain();setSyncStatus('ok','已同步');
   }).catch(function(){setSyncStatus('err','讀取失敗');});
 }
-
 function saveProject(){
   if(!currentProject)return;
   setSyncStatus('busy','儲存中…');
-  // Delete all rows for this project, then re-insert
-  dbDelete('items', {'project':'eq.'+currentProject}).then(function(){
-    var rows = zonesToRows();
-    if(rows.length===0){setSyncStatus('ok','已儲存');return;}
-    return dbPost('items', rows);
-  }).then(function(){setSyncStatus('ok','已儲存');}).catch(function(){setSyncStatus('err','儲存失敗');});
+  var rows=zonesToRows();
+  var encoded=encodeURIComponent(JSON.stringify(rows));
+  jsonp({action:'save',project:currentProject,data:encoded}).then(function(r){
+    if(r.ok) setSyncStatus('ok','已儲存');
+    else setSyncStatus('err','儲存失敗');
+  }).catch(function(){setSyncStatus('err','儲存失敗');});
 }
-function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1200);}
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1500);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
 
 function addProject(){
@@ -265,37 +277,22 @@ function addProject(){
   var name=inp.value.trim();
   if(!name){inp.focus();return;}
   if(projects.indexOf(name)>=0){alert('已有同名專案');return;}
-  dbPost('projects',[{name:name}]).then(function(){
-    projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
-    renderSidebar();renderMain();
-  }).catch(function(e){console.error(e);alert('新增失敗');});
+  setSyncStatus('busy','新增中…');
+  jsonp({action:'addproject',project:name}).then(function(r){
+    if(r.ok){
+      projects.push(name);inp.value='';zones=[];nextId=1;currentProject=name;
+      renderSidebar();renderMain();setSyncStatus('ok','已連線');
+    }
+  }).catch(function(){setSyncStatus('err','新增失敗');});
 }
 function deleteProject(name){
   if(!confirm('確定要刪除專案「'+name+'」？'))return;
   setSyncStatus('busy','刪除中…');
-  dbDelete('items',{'project':'eq.'+name}).then(function(){
-    return dbDelete('projects',{'name':'eq.'+name});
-  }).then(function(){
+  jsonp({action:'delete',project:name}).then(function(){
     projects=projects.filter(function(p){return p!==name;});
     if(currentProject===name){currentProject='';zones=[];document.getElementById('main-content').innerHTML='<div id="empty-state"><div class="big">📋</div><p>從左側選擇或新增專案</p></div>';}
     renderSidebar();setSyncStatus('ok','已刪除');
   }).catch(function(){setSyncStatus('err','刪除失敗');});
-}
-
-function rowsToZones(rows){
-  var map={},order=[];
-  rows.forEach(function(r){
-    if(!map[r.zone]){map[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};order.push(r.zone);}
-    map[r.zone].items.push({id:nextId++,name:r.name||'',qty:parseInt(r.qty)||1,power:r.power||'s110',type:r.type||'resident',watt:String(r.watt||''),height:String(r.height||''),note:String(r.note||'')});
-  });
-  return order.map(function(n){return map[n];});
-}
-function zonesToRows(){
-  var rows=[], order=0;
-  zones.forEach(function(z){z.items.forEach(function(it){
-    rows.push({project:currentProject,zone:z.name,sort_order:order++,name:it.name,qty:it.qty||1,power:it.power||'s110',type:it.type||'resident',watt:it.watt||'',height:it.height||'',note:it.note||''});
-  });});
-  return rows;
 }
 
 function renderSidebar(){
