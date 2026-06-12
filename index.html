@@ -268,11 +268,25 @@ function saveProject(){
   if(!currentProject)return;
   setSyncStatus('busy','儲存中…');
   var rows=zonesToRows();
-  var encoded=encodeURIComponent(JSON.stringify(rows));
-  jsonp({action:'save',project:currentProject,data:encoded}).then(function(r){
-    if(r.ok) setSyncStatus('ok','已儲存');
-    else setSyncStatus('err','儲存失敗');
-  }).catch(function(){setSyncStatus('err','儲存失敗');});
+  // 分批：每批最多 10 筆
+  var BATCH=10;
+  var batches=[];
+  for(var i=0;i<rows.length;i+=BATCH) batches.push(rows.slice(i,i+BATCH));
+  if(batches.length===0) batches.push([]);
+
+  var chain=Promise.resolve();
+  batches.forEach(function(batch,idx){
+    chain=chain.then(function(){
+      return jsonp({
+        action:'saverows',
+        project:currentProject,
+        data:encodeURIComponent(JSON.stringify(batch)),
+        clear:idx===0?'1':'0'
+      });
+    });
+  });
+  chain.then(function(){setSyncStatus('ok','已儲存');})
+       .catch(function(){setSyncStatus('err','儲存失敗');});
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1500);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
