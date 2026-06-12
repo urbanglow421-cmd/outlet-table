@@ -180,8 +180,8 @@ td select{font-family:'Noto Sans TC',sans-serif;font-size:12px;border:1px solid 
       </div>
       <div class="legend-section">
         <div class="legend-section-title">供電方式</div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>插座 110V / 220V</div><div class="legend-desc">一般電器插座迴路。</div></div>
-        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>直接配線 110V</div><div class="legend-desc">燈具走天花板或牆面配線。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-socket"></span>110V / 220V 插座</div><div class="legend-desc">一般電器插座迴路。</div></div>
+        <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-light"></span>110V / 220V 電源</div><div class="legend-desc">燈具走天花板或牆面直接配線。</div></div>
         <div class="legend-item"><div class="legend-tag"><span class="legend-dot dot-poe"></span>PoE</div><div class="legend-desc">透過網路線供電。如 IP 攝影機、無線基地台。</div></div>
       </div>
     </div>
@@ -199,9 +199,10 @@ var TYPES = [
   {key:'accent',label:'重點照明'},
 ];
 var POWERS = [
-  {key:'s110',label:'插座 110V'},
-  {key:'s220',label:'插座 220V'},
-  {key:'wire',label:'直接配線 110V'},
+  {key:'s110',label:'110V 插座'},
+  {key:'s220',label:'220V 插座'},
+  {key:'wire',label:'110V 電源'},
+  {key:'wire220',label:'220V 電源'},
   {key:'poe',label:'PoE'},
 ];
 var TYPE_POWER = {resident:'s110',flex:'s110',high:'s110',direct:'wire',indirect:'wire',accent:'wire'};
