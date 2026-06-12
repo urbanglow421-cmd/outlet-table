@@ -227,11 +227,15 @@ function jsonp(params){
   });
 }
 
+function migratePower(p){
+  var map={'110V':'s110','220V':'s220','resident':'s110','flex':'s110','high':'s110','direct':'wire','indirect':'wire','accent':'wire'};
+  return map[p] || p || 's110';
+}
 function rowsToZones(rows){
   var map={},order=[];
   (rows||[]).forEach(function(r){
     if(!map[r.zone]){map[r.zone]={id:nextId++,name:r.zone,open:true,locked:false,items:[]};order.push(r.zone);}
-    map[r.zone].items.push({id:nextId++,name:r.name||'',qty:parseInt(r.qty)||1,power:r.power||'s110',type:r.type||'resident',watt:String(r.watt||''),height:String(r.height||''),note:String(r.note||'')});
+    map[r.zone].items.push({id:nextId++,name:r.name||'',qty:parseInt(r.qty)||1,power:migratePower(r.power),type:r.type||'resident',watt:String(r.watt||''),height:String(r.height||''),note:String(r.note||'')});
   });
   return order.map(function(n){return map[n];});
 }
@@ -257,7 +261,7 @@ function loadProject(name){
   setSyncStatus('busy','讀取中…');
   jsonp({action:'get',project:name}).then(function(data){
     nextId=1;zones=rowsToZones(data.rows||[]);
-    renderMain();setSyncStatus('ok','已同步');
+    renderMain();setSyncStatus('ok','已連線');
   }).catch(function(){setSyncStatus('err','讀取失敗');});
 }
 function saveProject(){
