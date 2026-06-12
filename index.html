@@ -264,11 +264,13 @@ function loadProject(name){
     renderMain();setSyncStatus('ok','已連線');
   }).catch(function(){setSyncStatus('err','讀取失敗');});
 }
+var isSaving=false;
 function saveProject(){
   if(!currentProject)return;
+  if(isSaving)return; // 防止重複儲存
+  isSaving=true;
   setSyncStatus('busy','儲存中…');
   var rows=zonesToRows();
-  // 分批：每批最多 10 筆
   var BATCH=10;
   var batches=[];
   for(var i=0;i<rows.length;i+=BATCH) batches.push(rows.slice(i,i+BATCH));
@@ -285,8 +287,13 @@ function saveProject(){
       });
     });
   });
-  chain.then(function(){setSyncStatus('ok','已儲存');})
-       .catch(function(){setSyncStatus('err','儲存失敗');});
+  chain.then(function(){
+    setSyncStatus('ok','已儲存');
+    isSaving=false;
+  }).catch(function(){
+    setSyncStatus('err','儲存失敗');
+    isSaving=false;
+  });
 }
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveProject,1500);}
 function switchProject(name){currentProject=name;renderSidebar();loadProject(name);}
